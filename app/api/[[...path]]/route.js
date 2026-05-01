@@ -33,7 +33,8 @@ async function route(request, { params }) {
         const body = await request.json();
         const { name, email, password, role } = body || {};
         if (!name || !email || !password || !role) return err('Missing fields');
-        if (!['ADMIN', 'EMPLOYER', 'CANDIDATE'].includes(role)) return err('Invalid role');
+        // Admin accounts cannot be self-registered
+        if (!['EMPLOYER', 'CANDIDATE'].includes(role)) return err('Invalid role');
         const existing = await db.collection('users').findOne({ email: email.toLowerCase() });
         if (existing) return err('Email already registered', 409);
         const user = {

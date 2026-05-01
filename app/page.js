@@ -476,7 +476,6 @@ function AuthPage({ mode, setUser, setView, onSuccess }) {
                   <SelectContent>
                     <SelectItem value="CANDIDATE">Job seeker (Candidate)</SelectItem>
                     <SelectItem value="EMPLOYER">Employer (hiring)</SelectItem>
-                    <SelectItem value="ADMIN">Admin</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
