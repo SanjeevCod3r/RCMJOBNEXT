@@ -71,6 +71,16 @@ async function route(request, { params }) {
         return json({ user });
       }
     }
+    // ======= CATEGORIES =======
+    if (s0 === 'categories' && method === 'GET') {
+      const sections = [
+        { name: 'Operations', items: ['Scheduling Assistant', 'Patient Registration'] },
+        { name: 'Medical Billing & Coding', items: ['Medical Coding', 'Charge Posting', 'Payment Posting', 'Medical Transcription', 'Medical Scribe'] },
+        { name: 'AR & RCM', items: ['Eligibility & Benefits', 'Prior Authorization', 'Billing & Rejections'] },
+        { name: 'General', items: ['Design', 'Sales', 'Marketing', 'Finance', 'Technology', 'Engineering', 'Business', 'Human Resources'] }
+      ];
+      return json({ sections });
+    }
 
     // ======= JOBS =======
     if (s0 === 'jobs') {
@@ -79,6 +89,7 @@ async function route(request, { params }) {
         const search = url.searchParams.get('search')?.trim();
         const location = url.searchParams.get('location')?.trim();
         const skill = url.searchParams.get('skill')?.trim();
+        const category = url.searchParams.get('category')?.trim();
         const minSalary = parseInt(url.searchParams.get('minSalary') || '0', 10);
         const page = Math.max(1, parseInt(url.searchParams.get('page') || '1', 10));
         const limit = Math.min(50, parseInt(url.searchParams.get('limit') || '12', 10));
@@ -90,6 +101,7 @@ async function route(request, { params }) {
         ];
         if (location) q.location = { $regex: location, $options: 'i' };
         if (skill) q.requiredSkills = { $regex: skill, $options: 'i' };
+        if (category) q.category = { $regex: category, $options: 'i' };
         if (minSalary > 0) q.salary = { $gte: minSalary };
         const total = await db.collection('jobs').countDocuments(q);
         const jobs = await db.collection('jobs')
@@ -99,6 +111,24 @@ async function route(request, { params }) {
           .limit(limit)
           .toArray();
         return json({ jobs, total, page, limit });
+      }
+
+      // GET /api/jobs/mine (employer's own jobs)
+      if (s1 === 'mine' && method === 'GET') {
+        const user = await getUserFromRequest(request);
+        if (!user) return err('Unauthorized', 401);
+        const jobs = await db.collection('jobs').find({ createdBy: user.id }, { projection: { _id: 0 } }).sort({ createdAt: -1 }).toArray();
+        
+        // Attach application counts
+        const ids = jobs.map(j => j.id);
+        const counts = await db.collection('applications').aggregate([
+          { $match: { jobId: { $in: ids } } },
+          { $group: { _id: '$jobId', count: { $sum: 1 } } },
+        ]).toArray();
+        const countMap = Object.fromEntries(counts.map(c => [c._id, c.count]));
+        jobs.forEach(j => { j.applicantCount = countMap[j.id] || 0; });
+        
+        return json({ jobs });
       }
 
       // GET /api/jobs/:id
@@ -112,15 +142,15 @@ async function route(request, { params }) {
       if (segs.length === 1 && method === 'POST') {
         const user = await getUserFromRequest(request);
         if (!user) return err('Unauthorized', 401);
-        if (user.role !== 'EMPLOYER') return err('Only employers can post jobs', 403);
-        if (!user.isPremium) return err('Upgrade to premium to post jobs', 402);
+        if (user.role !== 'EMPLOYER' && user.role !== 'employer') return err('Only employers can post jobs', 403);
         const body = await request.json();
-        const { title, description, requiredSkills = [], experienceRequired = 0, companyName, location, salary = 0 } = body || {};
+        const { title, description, requiredSkills = [], experienceRequired = 0, companyName, location, salary = 0, category = 'General' } = body || {};
         if (!title || !description || !companyName || !location) return err('Missing fields');
         const job = {
           id: uuidv4(),
           title,
           description,
+          category,
           requiredSkills: Array.isArray(requiredSkills) ? requiredSkills : String(requiredSkills).split(',').map(s => s.trim()).filter(Boolean),
           experienceRequired: Number(experienceRequired) || 0,
           companyName,
@@ -166,21 +196,6 @@ async function route(request, { params }) {
         return json({ ok: true });
       }
 
-      // GET /api/jobs/mine  -> employer's jobs
-      if (s1 === 'mine' && method === 'GET') {
-        const user = await getUserFromRequest(request);
-        if (!user) return err('Unauthorized', 401);
-        const jobs = await db.collection('jobs').find({ createdBy: user.id }, { projection: { _id: 0 } }).sort({ createdAt: -1 }).toArray();
-        // attach application counts
-        const ids = jobs.map(j => j.id);
-        const counts = await db.collection('applications').aggregate([
-          { $match: { jobId: { $in: ids } } },
-          { $group: { _id: '$jobId', count: { $sum: 1 } } },
-        ]).toArray();
-        const countMap = Object.fromEntries(counts.map(c => [c._id, c.count]));
-        jobs.forEach(j => { j.applicantCount = countMap[j.id] || 0; });
-        return json({ jobs });
-      }
     }
 
     // ======= RESUME UPLOAD =======
@@ -367,6 +382,56 @@ async function route(request, { params }) {
       }
     }
 
+    // ============ COMMUNITY ============
+    if (s0 === 'community' && method === 'GET') {
+      const items = await db.collection('community').find({}).sort({ createdAt: -1 }).toArray();
+      return json({ items });
+    }
+    if (s0 === 'community' && method === 'POST') {
+      const u = await getUserFromRequest(request);
+      if (!u) return err('Unauthorized', 401);
+      const body = await request.json();
+      const item = { id: uuidv4(), ...body, userId: u.id, userName: u.name, userRole: u.role, createdAt: new Date(), likes: 0, comments: [] };
+      await db.collection('community').insertOne(item);
+      return json(item);
+    }
+
+    // ============ EMPLOYER / COMPANY ============
+    if (s0 === 'employer' && s1 === 'company') {
+      const u = await getUserFromRequest(request);
+      if (!u) return err('Unauthorized', 401);
+      if (u.role !== 'EMPLOYER' && u.role !== 'ADMIN') return err('Forbidden', 403);
+      if (method === 'GET') {
+        const company = await db.collection('companies').findOne({ employerId: u.id });
+        return json({ company });
+      }
+      if (method === 'POST') {
+        const body = await request.json();
+        const existing = await db.collection('companies').findOne({ employerId: u.id });
+        if (existing) {
+          await db.collection('companies').updateOne({ employerId: u.id }, { $set: { ...body, updatedAt: new Date() } });
+          return json({ ...existing, ...body });
+        } else {
+          const item = { id: uuidv4(), ...body, employerId: u.id, createdAt: new Date() };
+          await db.collection('companies').insertOne(item);
+          return json(item);
+        }
+      }
+    }
+
+    // ============ PUBLIC COLLECTIONS ============
+    if (['companies', 'freelance', 'academy'].includes(s0) && method === 'GET') {
+      const items = await db.collection(s0).find({}).toArray();
+      if (s0 === 'companies') {
+        const enriched = await Promise.all(items.map(async (c) => {
+          const jobs = await db.collection('jobs').find({ companyName: c.name }).toArray();
+          return { ...c, jobs };
+        }));
+        return json({ companies: enriched });
+      }
+      return json({ [s0]: items, items });
+    }
+
     // ======= ADMIN =======
     if (s0 === 'admin') {
       const user = await getUserFromRequest(request);
@@ -408,7 +473,55 @@ async function route(request, { params }) {
         const payments = await db.collection('payments').find({}, { projection: { _id: 0 } }).sort({ createdAt: -1 }).toArray();
         return json({ payments });
       }
+
+      // NEW ADMIN SECTIONS
+      if (s1 === 'companies') {
+        if (method === 'GET') return json({ companies: await db.collection('companies').find({}, { projection: { _id: 0 } }).sort({ name: 1 }).toArray() });
+        if (method === 'POST') {
+          const body = await request.json();
+          const item = { id: uuidv4(), ...body, createdAt: new Date() };
+          await db.collection('companies').insertOne(item);
+          return json(item);
+        }
+        if (s2 && method === 'DELETE') { await db.collection('companies').deleteOne({ id: s2 }); return json({ ok: true }); }
+      }
+      if (s1 === 'freelance') {
+        if (method === 'GET') return json({ items: await db.collection('freelance').find({}, { projection: { _id: 0 } }).sort({ createdAt: -1 }).toArray() });
+        if (method === 'POST') {
+          const body = await request.json();
+          const item = { id: uuidv4(), ...body, createdAt: new Date() };
+          await db.collection('freelance').insertOne(item);
+          return json(item);
+        }
+        if (s2 && method === 'DELETE') { await db.collection('freelance').deleteOne({ id: s2 }); return json({ ok: true }); }
+      }
+      if (s1 === 'academy') {
+        if (method === 'GET') return json({ items: await db.collection('academy').find({}, { projection: { _id: 0 } }).sort({ createdAt: -1 }).toArray() });
+        if (method === 'POST') {
+          const body = await request.json();
+          const item = { id: uuidv4(), ...body, createdAt: new Date() };
+          await db.collection('academy').insertOne(item);
+          return json(item);
+        }
+        if (s2 && method === 'DELETE') { await db.collection('academy').deleteOne({ id: s2 }); return json({ ok: true }); }
+      }
+      if (s1 === 'community') {
+        if (method === 'GET') return json({ items: await db.collection('community').find({}, { projection: { _id: 0 } }).sort({ createdAt: -1 }).toArray() });
+        if (method === 'POST') {
+          const body = await request.json();
+          const item = { id: uuidv4(), ...body, createdAt: new Date() };
+          await db.collection('community').insertOne(item);
+          return json(item);
+        }
+        if (s2 && method === 'DELETE') { await db.collection('community').deleteOne({ id: s2 }); return json({ ok: true }); }
+      }
     }
+
+    // Public GET endpoints for the new sections
+    if (s0 === 'companies' && method === 'GET') return json({ companies: await db.collection('companies').find({}, { projection: { _id: 0 } }).sort({ name: 1 }).toArray() });
+    if (s0 === 'freelance' && method === 'GET') return json({ items: await db.collection('freelance').find({}, { projection: { _id: 0 } }).sort({ createdAt: -1 }).toArray() });
+    if (s0 === 'academy' && method === 'GET') return json({ items: await db.collection('academy').find({}, { projection: { _id: 0 } }).sort({ createdAt: -1 }).toArray() });
+    if (s0 === 'community' && method === 'GET') return json({ items: await db.collection('community').find({}, { projection: { _id: 0 } }).sort({ createdAt: -1 }).toArray() });
 
     return err('Not found', 404);
   } catch (e) {

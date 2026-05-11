@@ -1,5 +1,6 @@
 import { Toaster } from 'sonner';
 import './globals.css';
+import Footer from '@/components/Footer';
 
 export const metadata = {
   title: 'CareerConnect — Find Your Next Opportunity',
@@ -12,9 +13,17 @@ export default function RootLayout({ children }) {
       <head>
         <script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
       </head>
-      <body>
-        {children}
-        <Toaster position="top-right" richColors />
+      <body className="antialiased selection:bg-indigo-100 selection:text-indigo-900">
+        
+          <div className="flex flex-col min-h-screen">
+          
+            <main className="flex-grow">
+              {children}
+            </main>
+          
+          </div>
+          <Toaster position="top-right" richColors closeButton />
+       
       </body>
     </html>
   );
