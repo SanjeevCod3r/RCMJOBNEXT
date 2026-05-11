@@ -13,17 +13,17 @@ export default function RootLayout({ children }) {
       <head>
         <script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
       </head>
-      <body className="antialiased selection:bg-indigo-100 selection:text-indigo-900">
-        
-          <div className="flex flex-col min-h-screen">
-          
-            <main className="flex-grow">
+      <body className="antialiased selection:bg-indigo-100 selection:text-indigo-900 overflow-x-hidden">
+
+          <div className="flex flex-col min-h-screen overflow-x-hidden">
+
+            <main className="flex-grow overflow-x-hidden">
               {children}
             </main>
-          
+
           </div>
           <Toaster position="top-right" richColors closeButton />
-       
+
       </body>
     </html>
   );

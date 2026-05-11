@@ -83,7 +83,15 @@ import {
   Quote,
   HelpCircle,
   CheckCircle,
-  Minus
+  Minus,
+  Menu,
+  Home as HomeIcon,
+  Info,
+  Award,
+  TrendingUp,
+  Send,
+  Filter,
+  Search as SearchIcon,
 } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Switch } from "@/components/ui/switch";
@@ -95,6 +103,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import Footer from "@/components/Footer";
 
 const HERO_IMG =
@@ -300,18 +313,19 @@ function App() {
         open={showInviteModal}
         onOpenChange={setShowInviteModal}
         user={user}
+        
       />
 
       {/* FLOATING REWARDS BUTTON */}
-      <div className="fixed bottom-8 right-8 z-[60]">
+      <div className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-[40]">
         <button
           onClick={() => setShowInviteModal(true)}
-          className="h-16 w-16 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-[0_8px_30px_rgb(37,99,235,0.4)] hover:scale-110 hover:-translate-y-1 active:scale-95 transition-all group relative"
+          className="h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-[0_8px_30px_rgb(37,99,235,0.4)] hover:scale-110 hover:-translate-y-1 active:scale-95 transition-all group relative"
         >
-          <div className="absolute -top-1 -right-1 h-5 w-5 bg-amber-400 border-2 border-white rounded-full animate-pulse" />
-          <Gift className="h-8 w-8 group-hover:rotate-12 transition-transform" />
+          <div className="absolute -top-1 -right-1 h-4 w-4 sm:h-5 sm:w-5 bg-amber-400 border-2 border-white rounded-full animate-pulse" />
+          <Gift className="h-7 w-7 sm:h-8 sm:w-8 group-hover:rotate-12 transition-transform" />
 
-          <div className="absolute right-full mr-4 bg-white text-slate-900 px-4 py-2 rounded-xl shadow-xl text-sm font-bold whitespace-nowrap opacity-0 translate-x-4 pointer-events-none group-hover:opacity-100 group-hover:translate-x-0 transition-all border border-slate-100">
+          <div className="hidden sm:block absolute right-full mr-4 bg-white text-slate-900 px-4 py-2 rounded-xl shadow-xl text-sm font-bold whitespace-nowrap opacity-0 translate-x-4 pointer-events-none group-hover:opacity-100 group-hover:translate-x-0 transition-all border border-slate-100">
             Invite & Earn Rewards! 🎁
           </div>
         </button>
@@ -334,6 +348,7 @@ function Navbar({
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [catSections, setCatSections] = useState([]);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -344,27 +359,32 @@ function Navbar({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const navigateMobile = (target) => {
+    setMobileOpen(false);
+    setView(target);
+  };
+
   return (
     <motion.header
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 100, damping: 20 }}
       className={`sticky top-0 z-50 transition-all duration-300 ${scrolled
-          ? "bg-white/80 backdrop-blur-lg border-b border-slate-200 py-2"
-          : "bg-transparent py-4"
+          ? "bg-white/90 backdrop-blur-lg border-b border-slate-200 py-2"
+          : "bg-white/80 backdrop-blur-md lg:bg-transparent py-3 lg:py-4"
         }`}
     >
-      <div className="container mx-auto px-6 flex items-center justify-between">
+      <div className="container mx-auto px-4 sm:px-6 flex items-center justify-between gap-3">
         <button
           onClick={() => setView("home")}
-          className="flex items-center gap-3 group"
+          className="flex items-center gap-2 sm:gap-3 group flex-shrink-0"
         >
           <img
             src="/assests/favicon.svg"
             alt="RCM Job Logo"
-            className="h-10 w-10 group-hover:scale-110 transition duration-300"
+            className="h-8 w-8 sm:h-10 sm:w-10 group-hover:scale-110 transition duration-300"
           />
-          <span className="font-bold text-2xl tracking-tight text-[#2D314D]">
+          <span className="font-bold text-lg sm:text-2xl tracking-tight text-[#2D314D]">
             RCM <span className="text-[#4B55E3]">Job</span>
           </span>
         </button>
@@ -450,8 +470,8 @@ function Navbar({
           </button>
         </nav>
 
-        <div className="flex items-center gap-6">
-          <div className="hidden sm:flex items-center gap-2">
+        <div className="flex items-center gap-2 sm:gap-4 lg:gap-6">
+          <div className="hidden lg:flex items-center gap-2">
             <Gamepad2 className="h-4 w-4 text-slate-400" />
             <Switch
               id="fun-mode"
@@ -472,7 +492,7 @@ function Navbar({
           </div>
 
           {user ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <Button
                 onClick={goDashboard}
                 variant="ghost"
@@ -482,7 +502,7 @@ function Navbar({
               </Button>
               <div className="h-8 w-[1px] bg-slate-200 hidden md:block" />
               <div className="flex items-center gap-3">
-                <div className="flex flex-col items-end hidden sm:flex">
+                <div className="hidden md:flex flex-col items-end">
                   <span className="text-sm font-semibold">{user.name}</span>
                   <span className="text-[10px] text-slate-500 uppercase tracking-wider">
                     {user.role}
@@ -490,7 +510,7 @@ function Navbar({
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger>
-                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 border border-white flex items-center justify-center text-indigo-700 font-bold shadow-sm">
+                    <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 border border-white flex items-center justify-center text-indigo-700 font-bold shadow-sm">
                       {user.name.charAt(0)}
                     </div>
                   </DropdownMenuTrigger>
@@ -517,7 +537,7 @@ function Navbar({
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-4">
+            <div className="hidden sm:flex items-center gap-2 sm:gap-4">
               <button
                 onClick={() => setView("login")}
                 className="text-[#4B55E3] font-bold text-sm hover:text-indigo-800 transition"
@@ -526,15 +546,148 @@ function Navbar({
               </button>
               <Button
                 onClick={() => setView("register")}
-                className="bg-[#4B55E3] hover:bg-[#3A43C5] px-6 rounded-lg font-medium shadow-md shadow-indigo-100 h-10"
+                className="bg-[#4B55E3] hover:bg-[#3A43C5] px-4 sm:px-6 rounded-lg font-medium shadow-md shadow-indigo-100 h-9 sm:h-10 text-sm"
               >
                 Sign Up
               </Button>
             </div>
           )}
+
+          {/* Mobile menu trigger */}
+          <button
+            type="button"
+            aria-label="Open menu"
+            onClick={() => setMobileOpen(true)}
+            className="lg:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 active:scale-95 transition relative z-[60]"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetContent side="right" className="w-[85vw] sm:w-[360px] p-0 overflow-y-auto z-[70]">
+              <div className="bg-gradient-to-br from-indigo-600 via-blue-600 to-indigo-700 px-5 py-6 text-white">
+                <div className="flex items-center gap-3">
+                  <img
+                    src="/assests/favicon.svg"
+                    alt="RCM Job Logo"
+                    className="h-10 w-10 bg-white/10 p-1 rounded-xl"
+                  />
+                  <div>
+                    <div className="font-bold text-xl tracking-tight">
+                      RCM <span className="text-amber-300">Job</span>
+                    </div>
+                  </div>
+                </div>
+
+                {user ? (
+                  <div className="mt-5 flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/10">
+                    <div className="h-11 w-11 rounded-xl bg-white text-indigo-600 flex items-center justify-center font-bold text-lg shadow-md">
+                      {user.name.charAt(0)}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="font-bold truncate">{user.name}</div>
+                      <div className="text-[10px] uppercase tracking-widest text-indigo-100/80 font-bold">
+                        {user.role}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-5 grid grid-cols-2 gap-2">
+                    <Button
+                      onClick={() => navigateMobile("login")}
+                      className="bg-white/10 hover:bg-white/20 text-white border border-white/20 h-10 rounded-xl font-bold"
+                    >
+                      Login
+                    </Button>
+                    <Button
+                      onClick={() => navigateMobile("register")}
+                      className="bg-white text-indigo-600 hover:bg-indigo-50 h-10 rounded-xl font-bold"
+                    >
+                      Sign Up
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              <nav className="p-4 space-y-1">
+                <MobileNavLink icon={HomeIcon} label="Home" onClick={() => navigateMobile("home")} />
+                <MobileNavLink icon={Briefcase} label="Browse Jobs" onClick={() => navigateMobile("jobs")} />
+                <MobileNavLink icon={Building2} label="Companies" onClick={() => navigateMobile("companies_view")} />
+                <MobileNavLink icon={Users} label="Community" onClick={() => navigateMobile("community_view")} />
+                <MobileNavLink icon={Info} label="About Us" onClick={() => navigateMobile("about")} />
+                <MobileNavLink icon={Phone} label="Contact Us" onClick={() => navigateMobile("contact")} />
+                {user && (
+                  <>
+                    <div className="my-2 border-t border-slate-100" />
+                    <MobileNavLink
+                      icon={LayoutDashboard}
+                      label="Dashboard"
+                      onClick={() => {
+                        setMobileOpen(false);
+                        goDashboard();
+                      }}
+                    />
+                    {user.role === "CANDIDATE" && (
+                      <>
+                        <MobileNavLink icon={User} label="Profile" onClick={() => navigateMobile("profile")} />
+                        <MobileNavLink icon={FileText} label="Resume Builder" onClick={() => navigateMobile("resume-builder")} />
+                      </>
+                    )}
+                    {user.role === "EMPLOYER" && (
+                      <MobileNavLink icon={Crown} label="Premium Plans" onClick={() => navigateMobile("premium")} />
+                    )}
+                  </>
+                )}
+              </nav>
+
+              <div className="px-4 pb-6">
+                <div className="flex items-center justify-between bg-slate-50 border border-slate-100 rounded-2xl p-3">
+                  <div className="flex items-center gap-2">
+                    <Gamepad2 className="h-4 w-4 text-indigo-500" />
+                    <span className="text-sm font-bold text-slate-700">Fun Mode</span>
+                  </div>
+                  <Switch
+                    checked={funMode}
+                    onCheckedChange={(checked) => {
+                      setFunMode(checked);
+                      if (checked) onFunModeEnable();
+                      else onFunModeDisable();
+                    }}
+                    className="data-[state=checked]:bg-[#4B55E3] data-[state=unchecked]:bg-slate-300"
+                  />
+                </div>
+
+                {user && (
+                  <Button
+                    onClick={() => {
+                      setMobileOpen(false);
+                      logout();
+                    }}
+                    className="w-full mt-4 bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 h-11 rounded-xl font-bold"
+                  >
+                    <LogOut className="h-4 w-4 mr-2" /> Logout
+                  </Button>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </motion.header>
+  );
+}
+
+function MobileNavLink({ icon: Icon, label, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 active:scale-[0.98] transition-all text-sm font-semibold"
+    >
+      <div className="h-9 w-9 rounded-xl bg-slate-50 flex items-center justify-center text-slate-500 group-hover:bg-indigo-100 group-hover:text-indigo-600">
+        <Icon className="h-4 w-4" />
+      </div>
+      <span>{label}</span>
+      <ArrowRight className="h-4 w-4 ml-auto text-slate-300" />
+    </button>
   );
 }
 
@@ -575,12 +728,12 @@ function Home({
   return (
     <div className="bg-white overflow-x-hidden">
       {/* HERO SECTION */}
-      <section className="relative z-10 overflow-x-hidden bg-gradient-to-br from-[#F8F8FD] via-white to-indigo-50/40 py-10 pb-0 lg:py-0 lg:pt-5">
+      <section className="relative z-10 overflow-x-hidden bg-gradient-to-br from-[#F8F8FD] via-white to-indigo-50/40 py-8 sm:py-10 pb-0 lg:py-0 lg:pt-5">
         {/* Decorative ambient orbs */}
         <div className="absolute top-20 -left-32 w-[400px] h-[400px] bg-indigo-300/20 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-300/20 rounded-full blur-[120px] pointer-events-none" />
 
-        <div className="relative z-10 container mx-auto px-6 w-full overflow-hidden">
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 w-full overflow-hidden">
           <div className="grid h-full w-full grid-cols-1 items-center gap-10 lg:grid-cols-2">
             {/* Left Section */}
             <div className="lg:self-start lg:pt-28">
@@ -595,7 +748,7 @@ function Home({
                 <div className="absolute -top-10 -left-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl" />
                 <motion.h1
                   initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
-                  className="mb-9 text-5xl leading-none font-bold text-[#2A2E43] xl:text-[5rem] tracking-tight relative z-10">
+                  className="mb-6 sm:mb-9 text-3xl sm:text-4xl md:text-5xl leading-tight sm:leading-none font-bold text-[#2A2E43] xl:text-[5rem] tracking-tight relative z-10">
                   Discover more than{" "}
                   <span className="text-indigo-600 relative inline-block">
                     5000+ Jobs
@@ -727,7 +880,7 @@ function Home({
 
       {/* TRUST SECTION */}
       <section className="py-20 border-y border-slate-100 bg-white">
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto px-4 sm:px-6">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -764,7 +917,7 @@ function Home({
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-emerald-200/40 rounded-full blur-[120px] -ml-32 -mb-32 pointer-events-none" />
         <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-amber-100/30 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
 
-        <div className="container mx-auto px-6 text-center relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -830,7 +983,7 @@ function Home({
         <div className="absolute top-32 right-0 w-72 h-72 bg-purple-100/40 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute bottom-32 left-0 w-72 h-72 bg-indigo-100/40 rounded-full blur-[100px] pointer-events-none" />
 
-        <div className="container mx-auto px-6 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -939,7 +1092,7 @@ function Home({
       <TopCompanies />
 
       {/* FEATURED JOBS SECTION */}
-      <section className="py-24 container mx-auto px-6 relative">
+      <section className="py-24 container mx-auto px-4 sm:px-6 relative">
         <div className="absolute top-20 right-0 w-72 h-72 bg-indigo-100/40 rounded-full blur-[100px] pointer-events-none -z-10" />
         <div className="absolute bottom-20 left-0 w-72 h-72 bg-blue-100/40 rounded-full blur-[100px] pointer-events-none -z-10" />
 
@@ -994,7 +1147,7 @@ function Home({
 
       {/* PROCESS TIMELINE */}
       <section className="py-24 bg-slate-50">
-        <div className="container mx-auto px-6 max-w-6xl">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1074,7 +1227,7 @@ function Home({
         <div className="absolute top-20 -left-20 w-[420px] h-[420px] bg-indigo-200/30 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-20 -right-20 w-[420px] h-[420px] bg-pink-200/30 rounded-full blur-[120px] pointer-events-none" />
 
-        <div className="container mx-auto px-6 max-w-7xl relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 max-w-7xl relative z-10">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -1212,7 +1365,7 @@ function Home({
           }}
         />
 
-        <div className="container mx-auto px-6 max-w-6xl relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl relative z-10">
           <div className="grid lg:grid-cols-[1fr,1.4fr] gap-12 lg:gap-20 items-start">
             {/* Left: Heading column */}
             <motion.div
@@ -1343,7 +1496,7 @@ function Home({
       </section>
 
       {/* POST JOB CTA BANNER */}
-      <section className="py-12 container mx-auto px-6">
+      <section className="py-12 container mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -1659,7 +1812,7 @@ function TopCompanies() {
       <div className="absolute top-1/4 left-0 w-[400px] h-[400px] bg-indigo-200/30 rounded-full blur-[120px] -ml-48 pointer-events-none" />
       <div className="absolute bottom-1/4 right-0 w-[400px] h-[400px] bg-pink-200/30 rounded-full blur-[120px] -mr-48 pointer-events-none" />
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -1986,7 +2139,7 @@ function Jobs({ setView, setSelectedJobId }) {
   return (
     <div className="bg-[#F8F9FE] min-h-screen">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 pt-32 pb-44 relative overflow-hidden">
+      <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 pt-12 sm:pt-20 lg:pt-32 pb-28 sm:pb-36 lg:pb-44 relative overflow-hidden">
         {/* Decorative Background Elements */}
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-indigo-500/20 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-blue-500/15 rounded-full blur-[100px] pointer-events-none" />
@@ -2011,15 +2164,15 @@ function Jobs({ setView, setSelectedJobId }) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="container mx-auto px-6 text-center relative z-10"
+          className="container mx-auto px-4 sm:px-6 text-center relative z-10"
         >
           <Badge className="bg-white/10 text-indigo-300 border-white/10 mb-6 px-4 py-1.5 rounded-full backdrop-blur-md uppercase tracking-widest text-[10px] font-bold">
             <Sparkles className="h-3 w-3 mr-2" /> Explore 5000+ Opportunities
           </Badge>
-          <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6 tracking-tight leading-[1.05]">
+          <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white mb-6 tracking-tight leading-tight sm:leading-[1.05]">
             Find Your Dream <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-blue-400 to-cyan-400">Career</span>
           </h1>
-          <p className="text-slate-400 font-semibold max-w-2xl mx-auto text-lg leading-relaxed">
+          <p className="text-slate-400 font-semibold max-w-2xl mx-auto text-sm sm:text-base lg:text-lg leading-relaxed">
             Discover hand-picked roles from top-tier companies and take the next step in your professional journey.
           </p>
 
@@ -2044,8 +2197,8 @@ function Jobs({ setView, setSelectedJobId }) {
       </div>
 
       {/* Floating Search Bar */}
-      <div className="container mx-auto px-6 max-w-6xl -mt-16 relative z-20">
-        <div className="bg-white rounded-3xl p-4 shadow-2xl shadow-indigo-900/10 flex flex-col lg:flex-row items-center border border-slate-100 gap-4 lg:gap-0">
+      <div className="container mx-auto px-4 sm:px-6 max-w-6xl -mt-16 relative z-20">
+        <div className="bg-white rounded-3xl p-3 sm:p-4 shadow-2xl shadow-indigo-900/10 flex flex-col lg:flex-row items-stretch lg:items-center border border-slate-100 gap-3 lg:gap-0">
           <div className="w-full lg:flex-1 flex items-center gap-4 px-6 py-3 lg:border-r border-slate-100">
             <Search className="h-5 w-5 text-indigo-600" />
             <div className="flex-1">
@@ -2119,13 +2272,13 @@ function Jobs({ setView, setSelectedJobId }) {
         </div>
       </div>
 
-      <section className="container mx-auto px-6 py-16 max-w-7xl">
+      <section className="container mx-auto px-4 sm:px-6 py-10 sm:py-16 max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
-          className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm shadow-indigo-100/30"
+          className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 sm:mb-12 gap-4 sm:gap-6 bg-white p-4 sm:p-6 rounded-3xl border border-slate-100 shadow-sm shadow-indigo-100/30"
         >
           <div className="flex items-center gap-3 text-slate-500 font-semibold">
             <div className="h-10 w-10 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center">
@@ -2311,7 +2464,7 @@ function JobDetails({ jobId, setView, user, onApplied }) {
       className="bg-[#F8F9FE] min-h-screen pb-20"
     >
       {/* Hero Header */}
-      <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 pt-24 pb-28 relative overflow-hidden">
+      <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 pt-10 sm:pt-16 lg:pt-24 pb-20 sm:pb-28 relative overflow-hidden">
         {/* Animated Background Orbs */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[120px] animate-pulse" />
         <div className="absolute -bottom-32 -left-32 w-[400px] h-[400px] bg-blue-600/15 rounded-full blur-[100px] animate-pulse delay-1000" />
@@ -2325,7 +2478,7 @@ function JobDetails({ jobId, setView, user, onApplied }) {
           }}
         />
 
-        <div className="container mx-auto px-6 max-w-6xl relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl relative z-10">
           <button
             onClick={() => setView("jobs")}
             className="group mb-8 inline-flex items-center gap-2 text-white/60 hover:text-white transition-all font-bold text-xs uppercase tracking-widest bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl px-4 py-2 backdrop-blur-md"
@@ -2392,7 +2545,7 @@ function JobDetails({ jobId, setView, user, onApplied }) {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-6 max-w-6xl -mt-12 relative z-20">
+      <div className="container mx-auto px-4 sm:px-6 max-w-6xl -mt-12 relative z-20">
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Left Column - Detailed Info */}
           <div className="lg:col-span-2 space-y-6">
@@ -2593,15 +2746,15 @@ function AuthPage({ mode, setUser, setView }) {
   };
 
   return (
-    <section className="min-h-[calc(100vh-64px)] flex items-center justify-center bg-[#0f0f12] relative overflow-hidden">
+    <section className="min-h-[calc(100vh-64px)] flex items-center justify-center bg-[#0f0f12] relative overflow-hidden py-10">
       {/* Decorative Gradients */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] -mr-64 -mt-64" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] -ml-64 -mb-64" />
 
-      <div className="container mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center max-w-6xl">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-6xl">
         {/* Left Side Info (from image) */}
         <div className="hidden lg:block space-y-8">
-          <h1 className="text-6xl font-bold text-white leading-tight">
+          <h1 className="text-4xl xl:text-6xl font-bold text-white leading-tight">
             Welcome{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
               Back
@@ -2844,10 +2997,10 @@ function CandidateDashboard({ user, setView, setSelectedJobId }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, type: "spring", bounce: 0 }}
-      className="min-h-screen bg-[#F8F9FD] pb-20"
+      className="min-h-screen bg-[#F8F9FD] pb-20 overflow-x-hidden"
     >
       {/* Hero banner */}
-      <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 pt-12 pb-28 relative overflow-hidden">
+      <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 pt-8 sm:pt-12 pb-24 sm:pb-28 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute -bottom-20 -left-20 w-[300px] h-[300px] bg-blue-600/15 rounded-full blur-[100px] pointer-events-none" />
         <div
@@ -2858,21 +3011,21 @@ function CandidateDashboard({ user, setView, setSelectedJobId }) {
           }}
         />
 
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="flex items-center gap-5">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6">
+            <div className="flex items-start sm:items-center gap-4 sm:gap-5">
               {/* Avatar */}
               <div className="relative flex-shrink-0">
                 <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-indigo-500 to-pink-500 blur-md opacity-50" />
-                <div className="relative h-16 w-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center font-bold text-white text-2xl shadow-xl border-4 border-white/10">
+                <div className="relative h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center font-bold text-white text-xl sm:text-2xl shadow-xl border-4 border-white/10">
                   {user.name?.charAt(0)?.toUpperCase() || "C"}
                 </div>
                 <div className="absolute -bottom-1 -right-1 bg-emerald-500 p-1 rounded-full shadow-md border-2 border-slate-900">
                   <CheckCircle className="h-3 w-3 text-white" />
                 </div>
               </div>
-              <div>
-                <div className="flex items-center gap-3 mb-1.5">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-1.5">
                   <Badge className="bg-white/10 text-indigo-300 border-white/10 backdrop-blur-md px-3 py-0.5 text-[10px] font-bold uppercase tracking-widest">
                     Candidate
                   </Badge>
@@ -2880,36 +3033,35 @@ function CandidateDashboard({ user, setView, setSelectedJobId }) {
                     ID: RCM-{user.id?.slice(-6) || "8821"}
                   </span>
                 </div>
-                <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-tight">
                   Welcome back, {user.name.split(" ")[0]}! <span className="inline-block animate-wave">👋</span>
                 </h1>
-                <p className="text-slate-300 text-sm mt-1 font-medium">
+                <p className="text-slate-300 text-xs sm:text-sm mt-1 font-medium">
                   You have {apps.filter((a) => a.status === "APPLIED").length}{" "}
                   active applications this week.
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-3 self-start md:self-auto">
+            <div className="grid grid-cols-2 sm:flex items-center gap-2 sm:gap-3 self-stretch sm:self-auto md:self-auto">
               <Button
                 onClick={() => setView("profile")}
-                className="h-11 px-5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md font-bold transition-all"
+                className="h-10 sm:h-11 px-3 sm:px-5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md font-bold transition-all text-xs sm:text-sm"
               >
-                <User className="h-4 w-4 mr-2" /> Edit Profile
+                <User className="h-4 w-4 mr-1.5 sm:mr-2" /> Edit Profile
               </Button>
               <Button
                 onClick={() => setView("resume-builder")}
-                className="h-11 px-5 rounded-xl bg-white text-indigo-600 hover:bg-slate-50 font-bold shadow-xl shadow-black/20 transition-all hover:scale-[1.02] group"
+                className="h-10 sm:h-11 px-3 sm:px-5 rounded-xl bg-white text-indigo-600 hover:bg-slate-50 font-bold shadow-xl shadow-black/20 transition-all hover:scale-[1.02] group text-xs sm:text-sm"
               >
-                <FileText className="h-4 w-4 mr-2" /> Build Resume
-                <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition" />
+                <FileText className="h-4 w-4 mr-1.5 sm:mr-2" /> Build Resume
               </Button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-6 -mt-16 relative z-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="container mx-auto px-4 sm:px-6 -mt-16 relative z-20">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
           {[
             { icon: Briefcase, label: "Total Applied", value: apps.length, color: "from-indigo-500 to-blue-500", bg: "bg-indigo-50", text: "text-indigo-600" },
             { icon: CheckCircle2, label: "Shortlisted", value: apps.filter((a) => a.status === "SHORTLISTED").length, color: "from-emerald-500 to-teal-500", bg: "bg-emerald-50", text: "text-emerald-600" },
@@ -2922,31 +3074,31 @@ function CandidateDashboard({ user, setView, setSelectedJobId }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: i * 0.06 }}
               whileHover={{ y: -4 }}
-              className="bg-white rounded-2xl p-5 border border-slate-100 shadow-lg shadow-slate-200/50 hover:shadow-xl hover:border-indigo-200 transition-all duration-300 group relative overflow-hidden"
+              className="bg-white rounded-2xl p-3 sm:p-5 border border-slate-100 shadow-lg shadow-slate-200/50 hover:shadow-xl hover:border-indigo-200 transition-all duration-300 group relative overflow-hidden"
             >
               <div className={`absolute -top-8 -right-8 w-24 h-24 rounded-full bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-10 blur-2xl transition-all duration-500 pointer-events-none`} />
-              <div className="flex items-center justify-between mb-3 relative z-10">
-                <div className={`h-10 w-10 rounded-xl ${stat.bg} flex items-center justify-center ${stat.text} group-hover:scale-110 transition-transform`}>
-                  <stat.icon className="h-5 w-5" />
+              <div className="flex items-center justify-between mb-2 sm:mb-3 relative z-10">
+                <div className={`h-9 w-9 sm:h-10 sm:w-10 rounded-xl ${stat.bg} flex items-center justify-center ${stat.text} group-hover:scale-110 transition-transform`}>
+                  <stat.icon className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
               </div>
-              <div className="text-2xl font-bold text-slate-900 mb-0.5 relative z-10">{stat.value}</div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest relative z-10">{stat.label}</div>
+              <div className="text-lg sm:text-2xl font-bold text-slate-900 mb-0.5 relative z-10">{stat.value}</div>
+              <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest relative z-10">{stat.label}</div>
             </motion.div>
           ))}
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
+        <div className="grid lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             <Card className="border border-slate-100 shadow-xl shadow-slate-200/40 rounded-3xl overflow-hidden bg-white">
-              <CardHeader className="border-b border-slate-100 pb-5 flex-row items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-1 h-8 bg-gradient-to-b from-indigo-600 to-blue-600 rounded-full" />
-                  <div>
-                    <CardTitle className="text-lg font-bold text-slate-900 tracking-tight">
+              <CardHeader className="border-b border-slate-100 pb-4 sm:pb-5 flex-row items-center justify-between gap-2 px-4 sm:px-6">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                  <div className="w-1 h-7 sm:h-8 bg-gradient-to-b from-indigo-600 to-blue-600 rounded-full flex-shrink-0" />
+                  <div className="min-w-0">
+                    <CardTitle className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
                       Recent Applications
                     </CardTitle>
-                    <CardDescription className="text-xs">
+                    <CardDescription className="text-[11px] sm:text-xs hidden sm:block">
                       Keep track of your job search progress
                     </CardDescription>
                   </div>
@@ -2954,12 +3106,12 @@ function CandidateDashboard({ user, setView, setSelectedJobId }) {
                 <Button
                   onClick={() => setView("jobs")}
                   variant="ghost"
-                  className="text-indigo-600 font-bold text-sm group"
+                  className="text-indigo-600 font-bold text-xs sm:text-sm group px-2 sm:px-3 flex-shrink-0"
                 >
                   View All <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition" />
                 </Button>
               </CardHeader>
-              <CardContent className="pt-5">
+              <CardContent className="pt-4 sm:pt-5 px-3 sm:px-6">
                 {loading ? (
                   <div className="flex justify-center py-20">
                     <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
@@ -2987,12 +3139,12 @@ function CandidateDashboard({ user, setView, setSelectedJobId }) {
                           setSelectedJobId(a.jobId);
                           setView("jobDetails");
                         }}
-                        className="group flex items-center justify-between p-4 border border-slate-100 rounded-2xl hover:bg-slate-50 hover:border-indigo-200 hover:shadow-md transition-all cursor-pointer"
+                        className="group flex items-center justify-between gap-2 p-3 sm:p-4 border border-slate-100 rounded-2xl hover:bg-slate-50 hover:border-indigo-200 hover:shadow-md transition-all cursor-pointer"
                       >
-                        <div className="flex items-center gap-4 min-w-0">
+                        <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
                           <div className="relative flex-shrink-0">
                             <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-br from-indigo-500/0 to-blue-500/0 group-hover:from-indigo-500/40 group-hover:to-blue-500/40 blur transition" />
-                            <div className="relative h-12 w-12 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-center font-bold text-indigo-600 text-lg overflow-hidden p-1">
+                            <div className="relative h-10 w-10 sm:h-12 sm:w-12 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-center font-bold text-indigo-600 text-base sm:text-lg overflow-hidden p-1">
                               {(a.companyLogo || a.logo) ? (
                                 <img
                                   src={a.companyLogo || a.logo}
@@ -3006,15 +3158,15 @@ function CandidateDashboard({ user, setView, setSelectedJobId }) {
                               </span>
                             </div>
                           </div>
-                          <div className="min-w-0">
-                            <div className="font-bold text-sm text-slate-900 group-hover:text-indigo-600 transition truncate">
+                          <div className="min-w-0 flex-1">
+                            <div className="font-bold text-xs sm:text-sm text-slate-900 group-hover:text-indigo-600 transition truncate">
                               {a.jobTitle}
                             </div>
-                            <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
-                              <span className="font-semibold text-slate-600 truncate">
+                            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] sm:text-xs text-slate-500 mt-0.5">
+                              <span className="font-semibold text-slate-600 truncate max-w-[120px] sm:max-w-none">
                                 {a.companyName}
                               </span>
-                              <span className="h-1 w-1 rounded-full bg-slate-300 flex-shrink-0" />
+                              <span className="hidden sm:inline-block h-1 w-1 rounded-full bg-slate-300 flex-shrink-0" />
                               <div className="flex items-center gap-1 flex-shrink-0">
                                 <Clock className="h-3 w-3" /> {new Date(a.appliedAt).toLocaleDateString()}
                               </div>
@@ -3025,7 +3177,7 @@ function CandidateDashboard({ user, setView, setSelectedJobId }) {
                           variant="outline"
                           className={`${statusColor(
                             a.status
-                          )} font-bold px-3 py-1 rounded-full border text-[10px] uppercase tracking-wider flex-shrink-0 ml-3`}
+                          )} font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full border text-[9px] sm:text-[10px] uppercase tracking-wider flex-shrink-0`}
                         >
                           {a.status}
                         </Badge>
@@ -3037,7 +3189,7 @@ function CandidateDashboard({ user, setView, setSelectedJobId }) {
             </Card>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <Card className="border-none shadow-xl shadow-indigo-200/40 rounded-3xl overflow-hidden bg-gradient-to-br from-indigo-600 via-indigo-700 to-blue-700 text-white relative">
               <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20 blur-2xl" />
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-pink-500/20 rounded-full -ml-16 -mb-16 blur-2xl" />
@@ -3048,15 +3200,15 @@ function CandidateDashboard({ user, setView, setSelectedJobId }) {
                   backgroundSize: "30px 30px"
                 }}
               />
-              <CardContent className="pt-7 pb-7 px-7 relative z-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-5">
+              <CardContent className="pt-6 sm:pt-7 pb-6 sm:pb-7 px-5 sm:px-7 relative z-10">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-4 sm:mb-5">
                   <Sparkles className="h-3 w-3 text-amber-300" />
                   <span className="text-[10px] font-bold text-white uppercase tracking-widest">Boost Profile</span>
                 </div>
-                <h3 className="text-xl font-bold mb-2.5 leading-tight tracking-tight">
+                <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-2.5 leading-tight tracking-tight">
                   Complete your profile to stand out!
                 </h3>
-                <p className="text-white/80 text-sm mb-5 leading-relaxed">
+                <p className="text-white/80 text-xs sm:text-sm mb-4 sm:mb-5 leading-relaxed">
                   Profiles with a complete summary and resume get 3x more
                   interview invites from top employers.
                 </p>
@@ -3213,16 +3365,16 @@ function ProfilePage({ user, setUser, setView }) {
     );
 
   // Inputs share these classes
-  const inputCls = "h-11 pl-10 pr-4 rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-sm font-medium bg-white";
+  const inputCls = "h-11 pl-10 pr-3 rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-sm font-medium bg-white w-full";
 
   // Compute profile strength based on filled fields
   const filledFields = [profile.phone, profile.location, profile.skills, profile.education, profile.bio, profile.projects, profile.resumeUrl].filter(Boolean).length;
   const strength = Math.min(100, Math.round((filledFields / 7) * 100));
 
   return (
-    <section className="min-h-screen bg-[#F8F9FD] pb-20">
+    <section className="min-h-screen bg-[#F8F9FD] pb-16 overflow-x-hidden">
       {/* Hero banner */}
-      <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 pt-10 pb-28 relative overflow-hidden">
+      <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 pt-8 sm:pt-10 pb-24 sm:pb-28 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute -bottom-20 -left-20 w-[300px] h-[300px] bg-blue-600/15 rounded-full blur-[100px] pointer-events-none" />
         <div
@@ -3232,10 +3384,10 @@ function ProfilePage({ user, setUser, setView }) {
             backgroundSize: "40px 40px"
           }}
         />
-        <div className="container mx-auto px-6 max-w-6xl relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl relative z-10">
           <Button
             onClick={() => setView("candidateDash")}
-            className="mb-6 inline-flex items-center gap-2 h-9 px-4 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md text-xs font-bold uppercase tracking-widest transition-all group"
+            className="mb-5 sm:mb-6 inline-flex items-center gap-2 h-9 px-3 sm:px-4 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md text-[10px] sm:text-xs font-bold uppercase tracking-widest transition-all group"
           >
             <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
             Back to Dashboard
@@ -3246,38 +3398,38 @@ function ProfilePage({ user, setUser, setView }) {
               <span className="text-[10px] font-bold text-white/80 uppercase tracking-widest">Edit Profile</span>
             </div>
           </div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-tight">
             Personal <span className="text-indigo-400">Profile</span>
           </h1>
-          <p className="text-slate-300 mt-1.5 font-medium text-sm">
+          <p className="text-slate-300 mt-1.5 font-medium text-xs sm:text-sm">
             Keep your information up to date for the best matches.
           </p>
         </div>
       </div>
 
-      <div className="container mx-auto px-6 max-w-6xl -mt-16 relative z-20">
-        <div className="grid lg:grid-cols-3 gap-6">
+      <div className="container mx-auto px-4 sm:px-6 max-w-6xl -mt-16 relative z-20">
+        <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 min-w-0">
           {/* LEFT COLUMN */}
-          <div className="lg:col-span-1 space-y-6">
+          <div className="lg:col-span-1 space-y-4 sm:space-y-6 min-w-0 w-full">
             {/* Profile Card */}
-            <Card className="border border-slate-100 shadow-xl shadow-slate-200/40 rounded-3xl overflow-hidden bg-white">
-              <div className="bg-gradient-to-br from-indigo-600 via-indigo-700 to-blue-700 p-6 pb-12 relative overflow-hidden">
+            <Card className="border border-slate-100 shadow-xl shadow-slate-200/40 rounded-3xl overflow-hidden bg-white w-full">
+              <div className="bg-gradient-to-br from-indigo-600 via-indigo-700 to-blue-700 p-5 sm:p-6 pb-10 sm:pb-12 relative overflow-hidden">
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
               </div>
-              <CardContent className="pt-0 -mt-10 flex flex-col items-center pb-6">
-                <div className="relative mb-4">
+              <CardContent className="pt-0 -mt-10 flex flex-col items-center pb-5 sm:pb-6 px-4 sm:px-6">
+                <div className="relative mb-3 sm:mb-4">
                   <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-indigo-500 to-pink-500 blur opacity-60" />
-                  <div className="relative h-20 w-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-white text-3xl font-bold shadow-xl border-4 border-white">
+                  <div className="relative h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-white text-2xl sm:text-3xl font-bold shadow-xl border-4 border-white">
                     {user.name.charAt(0)}
                   </div>
                   <div className="absolute -bottom-1 -right-1 bg-emerald-500 p-1 rounded-full shadow-md border-2 border-white">
                     <CheckCircle className="h-3 w-3 text-white" />
                   </div>
                 </div>
-                <h2 className="text-base font-bold text-slate-900 tracking-tight">
+                <h2 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight text-center break-all px-2">
                   {user.name}
                 </h2>
-                <p className="text-slate-500 text-xs mb-5">{user.email}</p>
+                <p className="text-slate-500 text-[11px] sm:text-xs mb-4 sm:mb-5 text-center break-all px-2">{user.email}</p>
 
                 {/* Profile Strength */}
                 <div className="w-full p-4 rounded-2xl bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100 mb-4">
@@ -3312,23 +3464,23 @@ function ProfilePage({ user, setUser, setView }) {
 
             {/* Resume Card */}
             <Card className="border border-slate-100 shadow-xl shadow-slate-200/40 rounded-3xl overflow-hidden bg-white">
-              <CardHeader className="pb-3">
+              <CardHeader className="pb-3 px-4 sm:px-6">
                 <div className="flex items-center gap-2.5">
                   <div className="w-1 h-6 bg-gradient-to-b from-indigo-600 to-blue-600 rounded-full" />
                   <div>
                     <CardTitle className="text-base font-bold tracking-tight">Resume</CardTitle>
-                    <CardDescription className="text-xs">Job ready status</CardDescription>
+                    <CardDescription className="text-[11px] sm:text-xs">Job ready status</CardDescription>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 px-4 sm:px-6">
                 {profile.resumeUrl ? (
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-2xl border border-emerald-100">
+                  <div className="space-y-3 min-w-0">
+                    <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-2xl border border-emerald-100 min-w-0">
                       <div className="h-9 w-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0">
                         <CheckCircle2 className="h-5 w-5" />
                       </div>
-                      <div className="min-w-0">
+                      <div className="min-w-0 flex-1 overflow-hidden">
                         <div className="text-[9px] font-bold text-emerald-700 uppercase tracking-widest">
                           Resume Uploaded
                         </div>
@@ -3395,23 +3547,23 @@ function ProfilePage({ user, setUser, setView }) {
           </div>
 
           {/* RIGHT COLUMN - FORM */}
-          <div className="lg:col-span-2">
-            <form onSubmit={save}>
-              <Card className="border border-slate-100 shadow-xl shadow-slate-200/40 rounded-3xl overflow-hidden bg-white">
-                <CardHeader className="pb-5 border-b border-slate-100">
+          <div className="lg:col-span-2 min-w-0 w-full">
+            <form onSubmit={save} className="w-full">
+              <Card className="border border-slate-100 shadow-xl shadow-slate-200/40 rounded-3xl overflow-hidden bg-white w-full">
+                <CardHeader className="pb-4 sm:pb-5 border-b border-slate-100 px-4 sm:px-6">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-1 h-8 bg-gradient-to-b from-indigo-600 to-blue-600 rounded-full" />
+                    <div className="w-1 h-7 sm:h-8 bg-gradient-to-b from-indigo-600 to-blue-600 rounded-full" />
                     <div>
-                      <CardTitle className="text-lg font-bold tracking-tight">
+                      <CardTitle className="text-base sm:text-lg font-bold tracking-tight">
                         Profile Details
                       </CardTitle>
-                      <CardDescription className="text-xs">
+                      <CardDescription className="text-[11px] sm:text-xs">
                         Professional information for potential employers
                       </CardDescription>
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-6 space-y-5">
+                <CardContent className="pt-5 sm:pt-6 space-y-5 px-4 sm:px-6">
                   {/* Contact section */}
                   <div>
                     <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
@@ -3573,24 +3725,24 @@ function ProfilePage({ user, setUser, setView }) {
                     </div>
                   </div>
                 </CardContent>
-                <CardFooter className="bg-slate-50 p-5 flex justify-between items-center gap-4 border-t border-slate-100">
+                <CardFooter className="bg-slate-50 p-4 sm:p-5 flex flex-col sm:flex-row justify-between sm:items-center gap-3 sm:gap-4 border-t border-slate-100">
                   <div className="flex items-center gap-2 text-slate-500 text-xs font-medium">
                     <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
                     Your data is secure
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="grid grid-cols-2 sm:flex items-center gap-2">
                     <Button
                       type="button"
                       onClick={() => setView("candidateDash")}
                       variant="ghost"
-                      className="h-11 px-5 rounded-xl font-bold text-sm hover:bg-white"
+                      className="h-11 px-4 sm:px-5 rounded-xl font-bold text-sm hover:bg-white border border-slate-200 sm:border-transparent"
                     >
                       Cancel
                     </Button>
                     <Button
                       type="submit"
                       disabled={saving}
-                      className="h-11 px-7 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 rounded-xl font-bold shadow-lg shadow-indigo-200 transition-all hover:scale-[1.02] active:scale-[0.98] text-sm"
+                      className="h-11 px-4 sm:px-7 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 rounded-xl font-bold shadow-lg shadow-indigo-200 transition-all hover:scale-[1.02] active:scale-[0.98] text-sm"
                     >
                       {saving ? (
                         <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -3665,7 +3817,7 @@ function EmployerDashboard({
       className="bg-[#F8F9FE] min-h-screen"
     >
       {/* Header banner */}
-      <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 pt-12 pb-28 relative overflow-hidden">
+      <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 pt-8 sm:pt-12 pb-24 sm:pb-28 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute -bottom-20 -left-20 w-[300px] h-[300px] bg-blue-600/15 rounded-full blur-[100px] pointer-events-none" />
         <div
@@ -3676,23 +3828,23 @@ function EmployerDashboard({
           }}
         />
 
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div>
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 sm:gap-6">
+            <div className="min-w-0">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 backdrop-blur-md mb-3">
                 <LayoutDashboard className="h-3.5 w-3.5 text-indigo-300" />
                 <span className="text-[10px] font-bold text-white/80 uppercase tracking-widest">Employer</span>
               </div>
-              <h1 className="text-3xl lg:text-4xl font-bold text-white tracking-tight">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight break-words">
                 {company?.name ? `Welcome back, ${company.name}` : "Employer Dashboard"}
               </h1>
-              <p className="text-slate-300 mt-2 font-medium">
+              <p className="text-slate-300 mt-2 font-medium text-sm sm:text-base">
                 Manage your company profile and job postings
               </p>
             </div>
             <Button
               onClick={handlePostJob}
-              className={`h-12 px-6 rounded-xl font-bold shadow-xl shadow-black/20 transition-all hover:scale-[1.02] group self-start md:self-auto ${
+              className={`h-11 sm:h-12 px-5 sm:px-6 rounded-xl font-bold shadow-xl shadow-black/20 transition-all hover:scale-[1.02] group self-start md:self-auto text-sm sm:text-base ${
                 isPremium
                   ? "bg-white text-indigo-600 hover:bg-slate-50"
                   : "bg-gradient-to-r from-amber-400 to-amber-500 text-amber-950 hover:from-amber-500 hover:to-amber-600"
@@ -3716,20 +3868,20 @@ function EmployerDashboard({
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.1 }}
-              className="mt-6 bg-gradient-to-r from-amber-400/20 to-orange-400/20 backdrop-blur-md border border-amber-300/40 rounded-2xl p-4 flex items-center justify-between gap-4"
+              className="mt-6 bg-gradient-to-r from-amber-400/20 to-orange-400/20 backdrop-blur-md border border-amber-300/40 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4"
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 min-w-0">
                 <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md flex-shrink-0">
                   <Crown className="h-5 w-5 text-white" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <div className="text-sm font-bold text-white">Subscribe to post jobs</div>
                   <div className="text-xs text-amber-100/80">Unlock unlimited job postings, premium placement and verified applicants.</div>
                 </div>
               </div>
               <Button
                 onClick={() => setView("premium")}
-                className="bg-white text-amber-700 hover:bg-amber-50 h-10 px-4 rounded-xl font-bold text-sm shadow-md flex-shrink-0"
+                className="bg-white text-amber-700 hover:bg-amber-50 h-10 px-4 rounded-xl font-bold text-sm shadow-md flex-shrink-0 w-full sm:w-auto"
               >
                 View Plans <ArrowRight className="h-4 w-4 ml-1" />
               </Button>
@@ -3737,7 +3889,7 @@ function EmployerDashboard({
           )}
 
           {/* Stat strip */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-8 sm:mt-10">
             {[
               { label: "Active Jobs", value: jobs.length, icon: Briefcase, color: "from-indigo-500 to-blue-500" },
               { label: "Total Applicants", value: jobs.reduce((sum, j) => sum + (j.applicantCount || 0), 0), icon: Users, color: "from-emerald-500 to-teal-500" },
@@ -3764,19 +3916,19 @@ function EmployerDashboard({
         </div>
       </div>
 
-      <div className="container mx-auto px-6 -mt-16 relative z-20 pb-16">
+      <div className="container mx-auto px-4 sm:px-6 -mt-16 relative z-20 pb-16">
         <Tabs defaultValue="jobs" className="space-y-6">
           <TabsList className="bg-white p-1.5 rounded-2xl w-full max-w-md shadow-xl shadow-indigo-100/40 border border-slate-100 h-auto">
-            <TabsTrigger value="jobs" className="flex-1 rounded-xl font-bold py-2.5 data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md">
-              <Briefcase className="h-4 w-4 mr-2" /> Active Jobs
+            <TabsTrigger value="jobs" className="flex-1 rounded-xl font-bold py-2.5 text-xs sm:text-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md">
+              <Briefcase className="h-4 w-4 mr-1.5 sm:mr-2" /> Active Jobs
             </TabsTrigger>
-            <TabsTrigger value="company" className="flex-1 rounded-xl font-bold py-2.5 data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md">
-              <Building2 className="h-4 w-4 mr-2" /> Company Profile
+            <TabsTrigger value="company" className="flex-1 rounded-xl font-bold py-2.5 text-xs sm:text-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md">
+              <Building2 className="h-4 w-4 mr-1.5 sm:mr-2" /> Company Profile
             </TabsTrigger>
           </TabsList>
 
         <TabsContent value="jobs">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {jobs.map((j, idx) => (
               <motion.div
                 key={j.id}
@@ -4191,7 +4343,7 @@ function PostJobPage({ user, setView }) {
   if (!isPremium) {
     return (
       <section className="min-h-screen bg-[#F8F9FD] py-16">
-        <div className="container mx-auto px-6 max-w-3xl">
+        <div className="container mx-auto px-4 sm:px-6 max-w-3xl">
           <Button
             onClick={() => setView("employerDash")}
             variant="ghost"
@@ -4306,7 +4458,7 @@ function PostJobPage({ user, setView }) {
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-[400px] h-[400px] bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none" />
 
-        <div className="container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center gap-12">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10 flex flex-col md:flex-row items-center gap-12">
           <div className="flex-1 text-center md:text-left">
             <h1 className="text-4xl lg:text-6xl font-extrabold text-white mb-6 leading-tight">
               Hire the Best <span className="text-emerald-400">RCM Talent</span>{" "}
@@ -4330,7 +4482,7 @@ function PostJobPage({ user, setView }) {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 max-w-7xl -mt-20 relative z-20">
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl -mt-20 relative z-20">
         <div className="grid lg:grid-cols-5 gap-12 items-start">
           {/* Left Column - Form */}
           <div className="lg:col-span-3 bg-white p-8 md:p-12 rounded-[2.5rem] shadow-2xl shadow-indigo-900/5 border border-slate-100">
@@ -4544,6 +4696,9 @@ function PostJobPage({ user, setView }) {
 function ApplicantsView({ jobId, setView }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState("ALL");
+  const [sortBy, setSortBy] = useState("match");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const load = async () => {
     try {
@@ -4582,187 +4737,196 @@ function ApplicantsView({ jobId, setView }) {
       </div>
     );
 
+  const allApps = data?.applications || [];
+  const stats = {
+    total: allApps.length,
+    shortlisted: allApps.filter((a) => a.status === "SHORTLISTED").length,
+    rejected: allApps.filter((a) => a.status === "REJECTED").length,
+    pending: allApps.filter((a) => a.status !== "SHORTLISTED" && a.status !== "REJECTED").length,
+  };
+
+  let filtered = allApps;
+  if (statusFilter !== "ALL") {
+    if (statusFilter === "PENDING") {
+      filtered = filtered.filter((a) => a.status !== "SHORTLISTED" && a.status !== "REJECTED");
+    } else {
+      filtered = filtered.filter((a) => a.status === statusFilter);
+    }
+  }
+  if (searchTerm.trim()) {
+    const q = searchTerm.toLowerCase();
+    filtered = filtered.filter(
+      (a) =>
+        a.candidateName?.toLowerCase().includes(q) ||
+        a.candidateEmail?.toLowerCase().includes(q) ||
+        (a.candidateSkills || []).some((s) => s.toLowerCase().includes(q))
+    );
+  }
+  filtered = [...filtered].sort((a, b) => {
+    if (sortBy === "match") return (b.matchScore || 0) - (a.matchScore || 0);
+    if (sortBy === "experience") return (b.candidateExperience || 0) - (a.candidateExperience || 0);
+    if (sortBy === "date") return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+    return 0;
+  });
+
+  const filterTabs = [
+    { key: "ALL", label: "All", count: stats.total, color: "from-indigo-500 to-blue-500" },
+    { key: "PENDING", label: "New", count: stats.pending, color: "from-amber-500 to-orange-500" },
+    { key: "SHORTLISTED", label: "Shortlisted", count: stats.shortlisted, color: "from-emerald-500 to-teal-500" },
+    { key: "REJECTED", label: "Rejected", count: stats.rejected, color: "from-rose-500 to-red-500" },
+  ];
+
   return (
-    <div className="bg-slate-50 min-h-screen pb-20">
-      {/* Header Section */}
-      <div className="bg-white border-b border-slate-200 pt-24 pb-8">
-        <div className="container mx-auto px-6 max-w-5xl">
+    <div className="bg-[#F6F7FB] min-h-screen pb-16">
+      {/* Hero Header */}
+      <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 pt-8 sm:pt-12 pb-24 sm:pb-28 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute -bottom-20 -left-20 w-[250px] sm:w-[300px] h-[250px] sm:h-[300px] bg-blue-600/15 rounded-full blur-[100px] pointer-events-none" />
+        <div
+          className="absolute inset-0 opacity-[0.05] pointer-events-none"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }}
+        />
+
+        <div className="container mx-auto px-4 sm:px-6 relative z-10 max-w-6xl">
           <Button
-            variant="ghost"
             onClick={() => setView("employerDash")}
-            className="mb-6 hover:bg-slate-100 rounded-full px-4 -ml-2 text-slate-600"
+            className="mb-5 inline-flex items-center gap-2 h-9 px-4 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md text-xs font-bold uppercase tracking-widest transition-all group"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Dashboard
+            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
+            Back to Dashboard
           </Button>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div>
-              <h1 className="text-3xl font-extrabold text-slate-900 mb-2">
-                Applicants for {data?.job?.title}
+
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+            <div className="min-w-0">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 backdrop-blur-md mb-3">
+                <Users className="h-3.5 w-3.5 text-indigo-300" />
+                <span className="text-[10px] font-bold text-white/80 uppercase tracking-widest">
+                  Applicant Pipeline
+                </span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight">
+                Applicants for{" "}
+                <span className="text-indigo-300">{data?.job?.title}</span>
               </h1>
-              <p className="text-slate-500 font-medium">
-                {data?.applications?.length || 0} results found (sorted by skill
-                match)
+              <p className="text-slate-300 mt-2 font-medium text-sm sm:text-base">
+                {stats.total} candidate{stats.total === 1 ? "" : "s"} have applied to this position.
               </p>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-bold text-slate-400">Sort By:</span>
-              <Select defaultValue="match">
-                <SelectTrigger className="w-40 rounded-full border-slate-200 bg-white">
-                  <SelectValue placeholder="Match Score" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="match">Match Score</SelectItem>
-                  <SelectItem value="date">Date Applied</SelectItem>
-                  <SelectItem value="experience">Experience</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          </div>
+
+          {/* Stats strip */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-8">
+            {[
+              { label: "Total", value: stats.total, icon: Users, color: "from-indigo-500 to-blue-500" },
+              { label: "New", value: stats.pending, icon: Sparkles, color: "from-amber-500 to-orange-500" },
+              { label: "Shortlisted", value: stats.shortlisted, icon: CheckCircle2, color: "from-emerald-500 to-teal-500" },
+              { label: "Rejected", value: stats.rejected, icon: XCircle, color: "from-rose-500 to-red-500" },
+            ].map((s, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.1 + i * 0.05 }}
+                className="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-3 sm:p-4 flex items-center gap-2.5 sm:gap-3"
+              >
+                <div
+                  className={`h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center shadow-md flex-shrink-0`}
+                >
+                  <s.icon className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[9px] sm:text-[10px] font-bold text-white/60 uppercase tracking-widest">
+                    {s.label}
+                  </div>
+                  <div className="text-lg sm:text-xl font-bold text-white">{s.value}</div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </div>
 
-      <section className="container mx-auto px-6 py-12 max-w-5xl">
-        {data?.applications?.length === 0 ? (
-          <EmptyState
-            icon={Users}
-            title="No applicants yet"
-            subtitle="You'll see candidates here once they apply for this position."
-          />
-        ) : (
-          <div className="grid gap-6">
-            {data.applications.map((a) => (
-              <div
-                key={a.id}
-                className="bg-white rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-200/40 overflow-hidden group hover:border-indigo-200 transition-all duration-300"
+      {/* Filter Bar */}
+      <div className="container mx-auto px-4 sm:px-6 -mt-16 sm:-mt-16 relative z-20 max-w-6xl">
+        <div className="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/40 p-3 sm:p-4 mb-6">
+          <div className="flex flex-col md:flex-row md:items-center gap-3">
+            <div className="relative flex-1 min-w-0">
+              <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Input
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search by name, email or skill..."
+                className="h-11 pl-10 rounded-xl border-slate-200 bg-slate-50 focus-visible:ring-indigo-500 focus-visible:bg-white text-sm"
+              />
+            </div>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-full md:w-44 h-11 rounded-xl border-slate-200 bg-slate-50 text-sm font-medium">
+                <Filter className="h-4 w-4 mr-2 text-slate-400" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="rounded-2xl">
+                <SelectItem value="match">Match Score</SelectItem>
+                <SelectItem value="date">Date Applied</SelectItem>
+                <SelectItem value="experience">Experience</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Status filter chips */}
+          <div className="flex items-center gap-2 mt-3 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
+            {filterTabs.map((t) => (
+              <button
+                key={t.key}
+                onClick={() => setStatusFilter(t.key)}
+                className={`flex-shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+                  statusFilter === t.key
+                    ? `bg-gradient-to-r ${t.color} text-white shadow-md`
+                    : "bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-100"
+                }`}
               >
-                <div className="p-8">
-                  <div className="flex flex-col md:flex-row items-start gap-8">
-                    {/* Left: Avatar */}
-                    <div className="h-20 w-20 rounded-2xl bg-indigo-50 flex items-center justify-center font-bold text-3xl text-indigo-600 shadow-inner group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                      {a.candidateName.charAt(0).toUpperCase()}
-                    </div>
+                {t.label}
+                <span
+                  className={`inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-[10px] font-bold ${
+                    statusFilter === t.key ? "bg-white/25 text-white" : "bg-white text-slate-700 border border-slate-100"
+                  }`}
+                >
+                  {t.count}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
 
-                    {/* Middle: Info */}
-                    <div className="flex-1 w-full">
-                      <div className="flex justify-between items-start mb-6">
-                        <div>
-                          <h3 className="text-2xl font-bold text-slate-900 mb-1 group-hover:text-indigo-600 transition-colors">
-                            {a.candidateName}
-                          </h3>
-                          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-slate-500 font-medium">
-                            <span className="flex items-center gap-1">
-                              <Mail className="h-4 w-4" /> {a.candidateEmail}
-                            </span>
-                            <span className="text-slate-300">•</span>
-                            <span className="flex items-center gap-1">
-                              <MapPin className="h-4 w-4" />{" "}
-                              {a.candidateLocation || "India"}
-                            </span>
-                          </div>
-                        </div>
-                        <Badge
-                          className={`${a.status === "SHORTLISTED"
-                              ? "bg-emerald-50 text-emerald-600"
-                              : a.status === "REJECTED"
-                                ? "bg-red-50 text-red-600"
-                                : "bg-indigo-50 text-indigo-600"
-                            } border-0 rounded-full px-4 py-1 text-[10px] font-extrabold tracking-widest uppercase`}
-                        >
-                          {a.status}
-                        </Badge>
-                      </div>
-
-                      {/* Attribute Grid */}
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-8">
-                        <div className="space-y-1">
-                          <div className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
-                            Experience
-                          </div>
-                          <div className="text-slate-800 font-bold">
-                            {a.candidateExperience} Years
-                          </div>
-                        </div>
-                        <div className="space-y-1">
-                          <div className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
-                            Match Score
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <div className="text-slate-800 font-bold">
-                              {a.matchScore}%
-                            </div>
-                            <div className="flex-1 h-2 bg-slate-100 rounded-full w-20 overflow-hidden">
-                              <div
-                                className={`h-full rounded-full ${a.matchScore >= 70
-                                    ? "bg-emerald-500"
-                                    : a.matchScore >= 40
-                                      ? "bg-amber-500"
-                                      : "bg-red-500"
-                                  }`}
-                                style={{ width: `${a.matchScore}%` }}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="space-y-1 col-span-2 md:col-span-1">
-                          <div className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
-                            Applied On
-                          </div>
-                          <div className="text-slate-800 font-bold">
-                            {new Date(
-                              a.createdAt || Date.now()
-                            ).toLocaleDateString("en-IN", {
-                              day: "numeric",
-                              month: "short",
-                              year: "numeric",
-                            })}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Skills Tags */}
-                      <div className="flex flex-wrap gap-2">
-                        {(a.candidateSkills || []).slice(0, 8).map((s) => (
-                          <Badge
-                            key={s}
-                            variant="secondary"
-                            className="bg-slate-50 text-slate-600 border-slate-100 font-bold text-xs py-1 px-3 rounded-lg"
-                          >
-                            {s}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Footer Actions */}
-                <div className="bg-slate-50/50 px-8 py-6 flex flex-wrap items-center justify-between gap-6 border-t border-slate-100">
-                  <a
-                    href={a.resumeUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-700 transition"
-                  >
-                    <FileText className="h-5 w-5" />
-                    View Candidate Resume
-                  </a>
-
-                  <div className="flex items-center gap-3">
-                    <Button
-                      onClick={() => updateStatus(a.id, "SHORTLISTED")}
-                      className="bg-white hover:bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-full px-6 font-bold flex items-center gap-2 transition-all shadow-sm shadow-emerald-100/50"
-                    >
-                      <CheckCircle2 className="h-4 w-4" /> Shortlist
-                    </Button>
-                    <Button
-                      onClick={() => updateStatus(a.id, "REJECTED")}
-                      className="bg-white hover:bg-red-50 text-red-500 border border-red-100 rounded-full px-6 font-bold flex items-center gap-2 transition-all shadow-sm shadow-red-100/50"
-                    >
-                      <XCircle className="h-4 w-4" /> Reject
-                    </Button>
-                  </div>
-                </div>
-              </div>
+      <section className="container mx-auto px-4 sm:px-6 max-w-6xl">
+        {filtered.length === 0 ? (
+          <div className="bg-white border-2 border-dashed border-slate-200 rounded-3xl p-10 sm:p-16 text-center">
+            <div className="h-16 w-16 rounded-2xl bg-indigo-50 flex items-center justify-center mx-auto mb-5">
+              <Users className="h-8 w-8 text-indigo-600" />
+            </div>
+            <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2 tracking-tight">
+              {allApps.length === 0 ? "No applicants yet" : "No matches found"}
+            </h3>
+            <p className="text-slate-500 text-sm max-w-md mx-auto">
+              {allApps.length === 0
+                ? "You'll see candidates here once they apply for this position."
+                : "Try changing your filters or search to see more applicants."}
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5 pb-4">
+            {filtered.map((a, idx) => (
+              <ApplicantCard
+                key={a.id}
+                a={a}
+                idx={idx}
+                onShortlist={() => updateStatus(a.id, "SHORTLISTED")}
+                onReject={() => updateStatus(a.id, "REJECTED")}
+              />
             ))}
           </div>
         )}
@@ -4771,19 +4935,197 @@ function ApplicantsView({ jobId, setView }) {
   );
 }
 
+function ApplicantCard({ a, idx, onShortlist, onReject }) {
+  const statusStyles = {
+    SHORTLISTED: {
+      badge: "bg-emerald-50 text-emerald-700 border-emerald-100",
+      dot: "bg-emerald-500",
+      stripe: "from-emerald-500 to-teal-500",
+    },
+    REJECTED: {
+      badge: "bg-rose-50 text-rose-700 border-rose-100",
+      dot: "bg-rose-500",
+      stripe: "from-rose-500 to-red-500",
+    },
+    APPLIED: {
+      badge: "bg-indigo-50 text-indigo-700 border-indigo-100",
+      dot: "bg-indigo-500",
+      stripe: "from-indigo-500 to-blue-500",
+    },
+  };
+  const s = statusStyles[a.status] || statusStyles.APPLIED;
+  const score = a.matchScore || 0;
+  const scoreColor =
+    score >= 70 ? "from-emerald-500 to-teal-500" : score >= 40 ? "from-amber-500 to-orange-500" : "from-rose-500 to-red-500";
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: (idx % 6) * 0.05 }}
+      whileHover={{ y: -3 }}
+      className="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/40 overflow-hidden hover:border-indigo-200 hover:shadow-2xl hover:shadow-indigo-100/40 transition-all duration-300 flex flex-col"
+    >
+      <div className={`h-1.5 w-full bg-gradient-to-r ${s.stripe}`} />
+
+      <div className="p-4 sm:p-6 flex-1">
+        <div className="flex items-start gap-3 sm:gap-4">
+          <div className="relative flex-shrink-0">
+            <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center font-bold text-xl sm:text-2xl text-indigo-700 shadow-inner">
+              {a.candidateName?.charAt(0).toUpperCase()}
+            </div>
+            <div
+              className={`absolute -bottom-1 -right-1 h-5 w-5 rounded-full border-2 border-white flex items-center justify-center ${s.dot}`}
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-white" />
+            </div>
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between gap-2 mb-1.5">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 truncate tracking-tight">
+                {a.candidateName}
+              </h3>
+              <Badge
+                className={`flex-shrink-0 border ${s.badge} rounded-lg px-2 py-0.5 text-[9px] sm:text-[10px] font-extrabold tracking-widest uppercase`}
+              >
+                {a.status}
+              </Badge>
+            </div>
+            <div className="flex flex-col gap-1 text-xs sm:text-sm text-slate-500 font-medium">
+              <span className="flex items-center gap-1.5 min-w-0">
+                <Mail className="h-3.5 w-3.5 flex-shrink-0 text-slate-400" />
+                <span className="truncate">{a.candidateEmail}</span>
+              </span>
+              <span className="flex items-center gap-1.5">
+                <MapPin className="h-3.5 w-3.5 flex-shrink-0 text-slate-400" />
+                {a.candidateLocation || "India"}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Match score */}
+        <div className="mt-4 sm:mt-5 bg-slate-50 border border-slate-100 rounded-2xl p-3 sm:p-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+              Skill Match
+            </span>
+            <span className="text-base sm:text-lg font-extrabold text-slate-900">{score}%</span>
+          </div>
+          <div className="h-2.5 w-full bg-white rounded-full overflow-hidden border border-slate-100">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${score}%` }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className={`h-full bg-gradient-to-r ${scoreColor} rounded-full`}
+            />
+          </div>
+        </div>
+
+        {/* Meta grid */}
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 mt-3 sm:mt-4">
+          <div className="bg-white border border-slate-100 rounded-xl p-3">
+            <div className="flex items-center gap-1.5 mb-1">
+              <Award className="h-3 w-3 text-indigo-500" />
+              <div className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                Experience
+              </div>
+            </div>
+            <div className="text-sm font-bold text-slate-900">
+              {a.candidateExperience || 0} yrs
+            </div>
+          </div>
+          <div className="bg-white border border-slate-100 rounded-xl p-3">
+            <div className="flex items-center gap-1.5 mb-1">
+              <Clock className="h-3 w-3 text-indigo-500" />
+              <div className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                Applied
+              </div>
+            </div>
+            <div className="text-sm font-bold text-slate-900">
+              {timeAgo(a.createdAt || Date.now())}
+            </div>
+          </div>
+        </div>
+
+        {/* Skills */}
+        {(a.candidateSkills || []).length > 0 && (
+          <div className="mt-4">
+            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
+              Top Skills
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {(a.candidateSkills || []).slice(0, 6).map((sk) => (
+                <Badge
+                  key={sk}
+                  variant="secondary"
+                  className="bg-indigo-50 text-indigo-700 border border-indigo-100 font-bold text-[10px] sm:text-xs py-0.5 px-2 rounded-md"
+                >
+                  {sk}
+                </Badge>
+              ))}
+              {(a.candidateSkills || []).length > 6 && (
+                <Badge className="bg-slate-50 text-slate-500 border border-slate-100 font-bold text-[10px] sm:text-xs py-0.5 px-2 rounded-md">
+                  +{(a.candidateSkills || []).length - 6}
+                </Badge>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Actions */}
+      <div className="bg-slate-50/60 border-t border-slate-100 px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+        {a.resumeUrl ? (
+          <a
+            href={a.resumeUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="flex-1 inline-flex items-center justify-center gap-2 h-10 rounded-xl bg-white border border-slate-200 text-indigo-600 font-bold text-xs sm:text-sm hover:bg-indigo-50 hover:border-indigo-200 transition-all"
+          >
+            <FileText className="h-4 w-4" /> View Resume
+          </a>
+        ) : (
+          <div className="flex-1 inline-flex items-center justify-center gap-2 h-10 rounded-xl bg-white border border-slate-100 text-slate-400 font-bold text-xs sm:text-sm">
+            No resume
+          </div>
+        )}
+        <div className="grid grid-cols-2 sm:flex gap-2">
+          <Button
+            onClick={onShortlist}
+            disabled={a.status === "SHORTLISTED"}
+            className="h-10 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <CheckCircle2 className="h-4 w-4" /> Shortlist
+          </Button>
+          <Button
+            onClick={onReject}
+            disabled={a.status === "REJECTED"}
+            className="h-10 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <XCircle className="h-4 w-4" /> Reject
+          </Button>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 // ============ PREMIUM PAGE ============
 function PremiumPage({ user, setUser, setView }) {
   const [loading, setLoading] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState("pro");
 
   // Candidates don't need premium - redirect them to jobs
   if (user?.role === "CANDIDATE") {
     return (
-      <section className="container mx-auto px-6 py-20 max-w-lg text-center">
+      <section className="container mx-auto px-4 sm:px-6 py-16 sm:py-20 max-w-lg text-center">
         <div className="h-16 w-16 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mx-auto mb-5">
           <CheckCircle className="h-8 w-8 text-emerald-600" />
         </div>
-        <h2 className="text-2xl font-bold text-slate-900 mb-2 tracking-tight">All Features Free for Candidates</h2>
-        <p className="text-slate-500 mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2 tracking-tight">All Features Free for Candidates</h2>
+        <p className="text-slate-500 mb-6 text-sm sm:text-base">
           Job seekers don't need a premium subscription. Apply to as many jobs as you like — no charges, no limits.
         </p>
         <Button onClick={() => setView("jobs")} className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white h-11 px-6 rounded-xl font-bold shadow-lg shadow-indigo-200">
@@ -4795,38 +5137,106 @@ function PremiumPage({ user, setUser, setView }) {
 
   if (user?.isPremium) {
     return (
-      <section className="container mx-auto px-6 py-20 max-w-lg text-center">
-        <Crown className="h-16 w-16 text-amber-500 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold mb-2">You're already Premium!</h2>
-        <p className="text-slate-600 mb-6">
+      <section className="container mx-auto px-4 sm:px-6 py-16 sm:py-20 max-w-lg text-center">
+        <div className="h-20 w-20 rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mx-auto mb-5 shadow-xl shadow-amber-200">
+          <Crown className="h-10 w-10 text-white" />
+        </div>
+        <Badge className="mb-3 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest">
+          Active Subscription
+        </Badge>
+        <h2 className="text-2xl sm:text-3xl font-bold mb-2 tracking-tight">You're already Premium!</h2>
+        <p className="text-slate-500 mb-6">
           Enjoy unlimited posting and all premium features.
         </p>
-        <Button onClick={() => setView("employerDash")}>Go to dashboard</Button>
+        <Button
+          onClick={() => setView("employerDash")}
+          className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white h-11 px-6 rounded-xl font-bold shadow-lg shadow-indigo-200"
+        >
+          Go to dashboard <ArrowRight className="h-4 w-4 ml-2" />
+        </Button>
       </section>
     );
   }
 
-  const pay = async () => {
+  const plans = [
+    {
+      key: "starter",
+      name: "Starter",
+      tagline: "For small teams just getting started",
+      price: 199,
+      period: "month",
+      gradient: "from-slate-500 to-slate-600",
+      light: "from-slate-50 to-slate-100",
+      icon: Briefcase,
+      features: [
+        { ok: true, text: "Post up to 3 active jobs" },
+        { ok: true, text: "Basic applicant tracking" },
+        { ok: true, text: "Email notifications" },
+        { ok: false, text: "Skill-match scoring" },
+        { ok: false, text: "Priority listings" },
+        { ok: false, text: "Verified employer badge" },
+      ],
+    },
+    {
+      key: "pro",
+      name: "Pro",
+      tagline: "Most popular — unlock the full hiring suite",
+      price: 499,
+      period: "lifetime",
+      gradient: "from-indigo-600 via-blue-600 to-indigo-700",
+      light: "from-indigo-50 to-blue-50",
+      icon: Crown,
+      popular: true,
+      features: [
+        { ok: true, text: "Post unlimited jobs" },
+        { ok: true, text: "Advanced applicant tracking" },
+        { ok: true, text: "Skill-match scoring" },
+        { ok: true, text: "Shortlist & reject applicants" },
+        { ok: true, text: "Priority email support" },
+        { ok: true, text: "Verified employer badge" },
+      ],
+    },
+    {
+      key: "enterprise",
+      name: "Enterprise",
+      tagline: "For large recruiters that need more control",
+      price: 1499,
+      period: "month",
+      gradient: "from-amber-500 via-orange-500 to-rose-500",
+      light: "from-amber-50 to-orange-50",
+      icon: Sparkles,
+      features: [
+        { ok: true, text: "Everything in Pro" },
+        { ok: true, text: "Dedicated account manager" },
+        { ok: true, text: "Featured company spotlight" },
+        { ok: true, text: "Bulk candidate export" },
+        { ok: true, text: "Custom hiring workflows" },
+        { ok: true, text: "24/7 priority support" },
+      ],
+    },
+  ];
+
+  const pay = async (plan) => {
     setLoading(true);
     try {
       const order = await api("/payment/create-order", {
         method: "POST",
-        body: JSON.stringify({ amount: 499 }),
+        body: JSON.stringify({ amount: plan.price }),
       });
       const rzp = new window.Razorpay({
         key: order.keyId,
         amount: order.amount,
         currency: order.currency,
-        name: "CareerConnect Premium",
-        description: "Lifetime premium access",
+        name: "RCM Job Premium",
+        description: `${plan.name} plan`,
         order_id: order.orderId,
         prefill: { name: user?.name, email: user?.email },
-        theme: { color: "#2563eb" },
+        theme: { color: "#4B55E3" },
         handler: async (response) => {
           try {
             await api("/payment/verify", {
               method: "POST",
-              body: JSON.stringify({ ...response, amount: 499 }),
+              body: JSON.stringify({ ...response, amount: plan.price }),
             });
             toast.success("Payment successful! You are now Premium 🎉");
             const { user: refreshed } = await api("/auth/me");
@@ -4838,7 +5248,7 @@ function PremiumPage({ user, setUser, setView }) {
         },
         modal: { ondismiss: () => setLoading(false) },
       });
-      rzp.on("payment.failed", (resp) => {
+      rzp.on("payment.failed", () => {
         toast.error("Payment failed");
         setLoading(false);
       });
@@ -4850,52 +5260,207 @@ function PremiumPage({ user, setUser, setView }) {
   };
 
   return (
-    <section className="container mx-auto px-6 py-16 max-w-2xl">
-      <Card className="overflow-hidden border-0 shadow-2xl">
-        <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 text-white p-10 text-center">
-          <Crown className="h-16 w-16 mx-auto mb-4" />
-          <h1 className="text-4xl font-bold mb-2">CareerConnect Premium</h1>
-          <p className="text-white/90">Unlock unlimited hiring power</p>
-          <div className="mt-6">
-            <span className="text-6xl font-bold">₹499</span>
-            <span className="text-white/80 ml-2">lifetime</span>
+    <div className="bg-[#F6F7FB] min-h-screen pb-16">
+      {/* Hero */}
+      <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 pt-10 pb-32 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute -bottom-20 -left-20 w-[250px] sm:w-[300px] h-[250px] sm:h-[300px] bg-amber-500/15 rounded-full blur-[100px] pointer-events-none" />
+        <div
+          className="absolute inset-0 opacity-[0.05] pointer-events-none"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }}
+        />
+
+        <div className="container mx-auto px-4 sm:px-6 relative z-10 max-w-6xl">
+          <Button
+            onClick={() => setView("employerDash")}
+            className="mb-6 inline-flex items-center gap-2 h-9 px-4 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md text-xs font-bold uppercase tracking-widest transition-all group"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
+            Back to Dashboard
+          </Button>
+
+          <div className="text-center max-w-3xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-300/40 backdrop-blur-md mb-4"
+            >
+              <Crown className="h-3.5 w-3.5 text-amber-300" />
+              <span className="text-[10px] font-bold text-amber-100 uppercase tracking-widest">
+                Employer Premium
+              </span>
+            </motion.div>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-tight">
+              Hire the best talent <br className="hidden sm:block" />
+              with the <span className="text-amber-300">right plan</span>
+            </h1>
+            <p className="mt-4 text-slate-300 font-medium text-sm sm:text-base max-w-xl mx-auto">
+              Choose the package that fits your hiring goals. Cancel anytime — no hidden fees, no surprises.
+            </p>
+
+            {/* trust strip */}
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-white/70 text-xs sm:text-sm font-medium">
+              <span className="flex items-center gap-1.5">
+                <ShieldCheck className="h-4 w-4 text-emerald-400" /> Secure payments
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Zap className="h-4 w-4 text-amber-300" /> Instant activation
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Heart className="h-4 w-4 text-pink-300" /> Loved by 5,000+ teams
+              </span>
+            </div>
           </div>
         </div>
-        <CardContent className="p-8">
-          <ul className="space-y-3 mb-8">
+      </div>
+
+      {/* Plans */}
+      <div className="container mx-auto px-4 sm:px-6 -mt-24 relative z-20 max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+          {plans.map((p, idx) => {
+            const isSelected = selectedPlan === p.key;
+            return (
+              <motion.div
+                key={p.key}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: idx * 0.08 }}
+                whileHover={{ y: -4 }}
+                className={`relative bg-white rounded-3xl border-2 transition-all duration-300 overflow-hidden shadow-xl ${
+                  p.popular
+                    ? "border-indigo-200 shadow-indigo-200/40 md:scale-[1.03] z-10"
+                    : isSelected
+                    ? "border-indigo-200 shadow-indigo-100/40"
+                    : "border-slate-100 shadow-slate-200/40"
+                }`}
+              >
+                {p.popular && (
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-extrabold uppercase tracking-widest px-4 py-1 rounded-b-xl shadow-md">
+                    Most Popular
+                  </div>
+                )}
+
+                <div className={`bg-gradient-to-br ${p.light} p-6 sm:p-7 relative overflow-hidden`}>
+                  <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/40 rounded-full blur-2xl pointer-events-none" />
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div
+                        className={`h-12 w-12 rounded-2xl bg-gradient-to-br ${p.gradient} flex items-center justify-center shadow-lg`}
+                      >
+                        <p.icon className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+                          {p.name}
+                        </div>
+                        <div className="text-[10px] sm:text-xs text-slate-500 font-medium">
+                          {p.tagline}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-3xl sm:text-4xl font-extrabold text-slate-900">
+                        ₹{p.price}
+                      </span>
+                      <span className="text-slate-500 text-xs sm:text-sm font-medium">
+                        /{p.period}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-6 sm:p-7">
+                  <ul className="space-y-3 mb-6">
+                    {p.features.map((f, i) => (
+                      <li key={i} className="flex items-start gap-2.5">
+                        <div
+                          className={`h-5 w-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                            f.ok ? "bg-emerald-100" : "bg-slate-100"
+                          }`}
+                        >
+                          {f.ok ? (
+                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                          ) : (
+                            <Minus className="h-3 w-3 text-slate-400" />
+                          )}
+                        </div>
+                        <span
+                          className={`text-xs sm:text-sm font-medium ${
+                            f.ok ? "text-slate-700" : "text-slate-400 line-through"
+                          }`}
+                        >
+                          {f.text}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Button
+                    onClick={() => {
+                      setSelectedPlan(p.key);
+                      pay(p);
+                    }}
+                    disabled={loading}
+                    className={`w-full h-12 rounded-xl font-bold text-sm sm:text-base shadow-lg transition-all active:scale-[0.98] ${
+                      p.popular
+                        ? "bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white shadow-indigo-200"
+                        : "bg-white text-slate-900 border-2 border-slate-200 hover:border-indigo-300 hover:text-indigo-600 shadow-slate-200/50"
+                    }`}
+                  >
+                    {loading && selectedPlan === p.key ? (
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                    ) : (
+                      <>
+                        Choose {p.name}
+                        <ArrowRight className="h-4 w-4 ml-2" />
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Features comparison strip */}
+        <div className="mt-12 bg-white border border-slate-100 rounded-3xl shadow-xl shadow-slate-200/40 p-6 sm:p-8">
+          <div className="text-center mb-6">
+            <Badge className="bg-indigo-50 text-indigo-700 border border-indigo-100 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest mb-3">
+              Why upgrade
+            </Badge>
+            <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+              Everything you need to <span className="text-indigo-600">scale hiring</span>
+            </h3>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
             {[
-              "Post unlimited jobs",
-              "View applicant skill-match scores",
-              "Shortlist & reject applicants",
-              "Priority support",
-              "No hidden fees",
-            ].map((f) => (
-              <li key={f} className="flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-green-600" />
-                {f}
-              </li>
+              { icon: Users, title: "Unlimited applicants", desc: "Review every candidate, no caps.", color: "from-indigo-500 to-blue-500" },
+              { icon: TrendingUp, title: "Skill-match insights", desc: "Smart ranking by job fit.", color: "from-emerald-500 to-teal-500" },
+              { icon: ShieldCheck, title: "Verified employer", desc: "Stand out with a trusted badge.", color: "from-amber-500 to-orange-500" },
+              { icon: MessageSquare, title: "Priority support", desc: "We answer in hours, not days.", color: "from-rose-500 to-pink-500" },
+            ].map((f, i) => (
+              <div key={i} className="bg-slate-50/50 border border-slate-100 rounded-2xl p-4 sm:p-5">
+                <div className={`h-10 w-10 rounded-xl bg-gradient-to-br ${f.color} flex items-center justify-center shadow-md mb-3`}>
+                  <f.icon className="h-5 w-5 text-white" />
+                </div>
+                <div className="text-sm sm:text-base font-bold text-slate-900 mb-1">{f.title}</div>
+                <div className="text-xs sm:text-sm text-slate-500 font-medium">{f.desc}</div>
+              </div>
             ))}
-          </ul>
-          <Button
-            onClick={pay}
-            disabled={!user || loading}
-            size="lg"
-            className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-lg py-6"
-          >
-            {loading ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
-            ) : (
-              <>
-                Pay ₹499 with Razorpay <ArrowRight className="h-5 w-5 ml-2" />
-              </>
-            )}
-          </Button>
-          <p className="text-xs text-slate-500 text-center mt-3">
-            Test mode — use card 4111 1111 1111 1111, any CVV/date.
-          </p>
-        </CardContent>
-      </Card>
-    </section>
+          </div>
+        </div>
+
+        {/* FAQ note */}
+        <p className="text-center text-xs text-slate-500 mt-8 font-medium">
+          🔒 Secure checkout via Razorpay · Test card: <span className="font-mono">4111 1111 1111 1111</span> · any CVV/date
+        </p>
+      </div>
+    </div>
   );
 }
 
@@ -4949,9 +5514,9 @@ function ResumeBuilder({ user, setView }) {
   const completion = Math.round((filled / 6) * 100);
 
   return (
-    <div className="min-h-screen bg-[#F8F9FD] pb-12 print:p-0 print:bg-white">
+    <div className="min-h-screen bg-[#F8F9FD] pb-12 print:p-0 print:bg-white overflow-x-hidden">
       {/* Hero banner */}
-      <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 pt-10 pb-28 relative overflow-hidden print:hidden">
+      <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 pt-8 sm:pt-10 pb-24 sm:pb-28 relative overflow-hidden print:hidden">
         <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute -bottom-20 -left-20 w-[300px] h-[300px] bg-blue-600/15 rounded-full blur-[100px] pointer-events-none" />
         <div
@@ -4961,30 +5526,30 @@ function ResumeBuilder({ user, setView }) {
             backgroundSize: "40px 40px"
           }}
         />
-        <div className="container mx-auto px-6 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <Button
             onClick={() => setView("candidateDash")}
-            className="mb-6 inline-flex items-center gap-2 h-9 px-4 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md text-xs font-bold uppercase tracking-widest transition-all group"
+            className="mb-5 sm:mb-6 inline-flex items-center gap-2 h-9 px-3 sm:px-4 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md text-[10px] sm:text-xs font-bold uppercase tracking-widest transition-all group"
           >
             <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
             Back to Dashboard
           </Button>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6">
+            <div className="min-w-0">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 backdrop-blur-md mb-3">
                 <FileText className="h-3 w-3 text-indigo-300" />
                 <span className="text-[10px] font-bold text-white/80 uppercase tracking-widest">Resume Builder</span>
               </div>
-              <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-tight">
                 Build a <span className="text-indigo-400">winning</span> resume
               </h1>
-              <p className="text-slate-300 mt-1.5 font-medium text-sm">
+              <p className="text-slate-300 mt-1.5 font-medium text-xs sm:text-sm">
                 Fill in your details and preview your resume in real time.
               </p>
             </div>
-            <div className="flex items-center gap-3 self-start md:self-auto">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 self-stretch sm:self-auto md:self-auto">
               <Select value={template} onValueChange={setTemplate}>
-                <SelectTrigger className="w-44 h-11 rounded-xl bg-white/10 border border-white/20 text-white text-sm font-bold backdrop-blur-md hover:bg-white/20 transition-all">
+                <SelectTrigger className="w-full sm:w-44 h-11 rounded-xl bg-white/10 border border-white/20 text-white text-sm font-bold backdrop-blur-md hover:bg-white/20 transition-all">
                   <SelectValue placeholder="Template" />
                 </SelectTrigger>
                 <SelectContent className="rounded-2xl border-slate-100">
@@ -4995,7 +5560,7 @@ function ResumeBuilder({ user, setView }) {
               </Select>
               <Button
                 onClick={print}
-                className="h-11 px-5 rounded-xl bg-white text-indigo-600 hover:bg-slate-50 font-bold shadow-xl shadow-black/20 transition-all hover:scale-[1.02] group"
+                className="h-11 px-5 rounded-xl bg-white text-indigo-600 hover:bg-slate-50 font-bold shadow-xl shadow-black/20 transition-all hover:scale-[1.02] group w-full sm:w-auto justify-center"
               >
                 <Upload className="h-4 w-4 mr-2" /> Download PDF
               </Button>
@@ -5022,11 +5587,11 @@ function ResumeBuilder({ user, setView }) {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 -mt-16 relative z-20 grid lg:grid-cols-2 gap-6 print:gap-0 print:mt-0 print:p-0">
+      <div className="container mx-auto px-4 sm:px-6 -mt-16 relative z-20 grid lg:grid-cols-2 gap-4 sm:gap-6 print:gap-0 print:mt-0 print:p-0 min-w-0">
         {/* FORM SIDE */}
-        <div className="space-y-5 print:hidden">
+        <div className="space-y-4 sm:space-y-5 print:hidden min-w-0 w-full">
           <Card className="border border-slate-100 shadow-xl shadow-slate-200/40 rounded-3xl overflow-hidden bg-white">
-            <CardHeader className="border-b border-slate-100 pb-4 bg-gradient-to-br from-indigo-50 to-blue-50">
+            <CardHeader className="border-b border-slate-100 pb-3 sm:pb-4 px-4 sm:px-6 bg-gradient-to-br from-indigo-50 to-blue-50">
               <div className="flex items-center gap-2.5">
                 <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-500 flex items-center justify-center shadow-md flex-shrink-0">
                   <User className="h-4 w-4 text-white" />
@@ -5034,8 +5599,8 @@ function ResumeBuilder({ user, setView }) {
                 <CardTitle className="text-base font-bold tracking-tight">Personal Info</CardTitle>
               </div>
             </CardHeader>
-            <CardContent className="pt-5 space-y-4">
-              <div className="grid grid-cols-2 gap-3">
+            <CardContent className="pt-4 sm:pt-5 space-y-4 px-4 sm:px-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <Label className="text-slate-500 font-bold text-[10px] uppercase tracking-wider ml-1">
                     Phone
@@ -5097,8 +5662,8 @@ function ResumeBuilder({ user, setView }) {
           </Card>
 
           <Card className="border border-slate-100 shadow-xl shadow-slate-200/40 rounded-3xl overflow-hidden bg-white">
-            <CardHeader className="border-b border-slate-100 pb-4 bg-gradient-to-br from-purple-50 to-pink-50 flex-row items-center justify-between">
-              <div className="flex items-center gap-2.5">
+            <CardHeader className="border-b border-slate-100 pb-3 sm:pb-4 px-4 sm:px-6 bg-gradient-to-br from-purple-50 to-pink-50 flex-row items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5 min-w-0">
                 <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-md flex-shrink-0">
                   <Briefcase className="h-4 w-4 text-white" />
                 </div>
@@ -5108,24 +5673,24 @@ function ResumeBuilder({ user, setView }) {
                 onClick={addExp}
                 variant="outline"
                 size="sm"
-                className="rounded-xl h-8 border-purple-200 bg-white text-purple-700 hover:bg-purple-50 font-bold text-xs"
+                className="rounded-xl h-8 border-purple-200 bg-white text-purple-700 hover:bg-purple-50 font-bold text-xs flex-shrink-0"
               >
                 <Plus className="h-3.5 w-3.5 mr-1" /> Add
               </Button>
             </CardHeader>
-            <CardContent className="pt-5 space-y-4">
+            <CardContent className="pt-4 sm:pt-5 space-y-4 px-4 sm:px-6">
               {data.experience.map((exp, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="space-y-3 p-4 rounded-2xl bg-slate-50 border border-slate-100 relative group"
+                  className="space-y-3 p-3 sm:p-4 rounded-2xl bg-slate-50 border border-slate-100 relative group"
                 >
                   <div className="absolute top-3 left-3 h-6 w-6 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-[10px] font-black text-slate-500">
                     {String(i + 1).padStart(2, "0")}
                   </div>
-                  <div className="grid grid-cols-2 gap-3 pl-9">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-9">
                     <Input
                       placeholder="Company"
                       value={exp.company}
@@ -5177,7 +5742,7 @@ function ResumeBuilder({ user, setView }) {
                         );
                         setData({ ...data, experience: newExp });
                       }}
-                      className="absolute top-3 right-3 h-7 w-7 rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
+                      className="absolute top-3 right-3 h-7 w-7 rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 flex items-center justify-center lg:opacity-0 lg:group-hover:opacity-100 transition"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
@@ -5188,8 +5753,8 @@ function ResumeBuilder({ user, setView }) {
           </Card>
 
           <Card className="border border-slate-100 shadow-xl shadow-slate-200/40 rounded-3xl overflow-hidden bg-white">
-            <CardHeader className="border-b border-slate-100 pb-4 bg-gradient-to-br from-emerald-50 to-teal-50 flex-row items-center justify-between">
-              <div className="flex items-center gap-2.5">
+            <CardHeader className="border-b border-slate-100 pb-3 sm:pb-4 px-4 sm:px-6 bg-gradient-to-br from-emerald-50 to-teal-50 flex-row items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5 min-w-0">
                 <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-md flex-shrink-0">
                   <GraduationCap className="h-4 w-4 text-white" />
                 </div>
@@ -5199,19 +5764,19 @@ function ResumeBuilder({ user, setView }) {
                 onClick={addEdu}
                 variant="outline"
                 size="sm"
-                className="rounded-xl h-8 border-emerald-200 bg-white text-emerald-700 hover:bg-emerald-50 font-bold text-xs"
+                className="rounded-xl h-8 border-emerald-200 bg-white text-emerald-700 hover:bg-emerald-50 font-bold text-xs flex-shrink-0"
               >
                 <Plus className="h-3.5 w-3.5 mr-1" /> Add
               </Button>
             </CardHeader>
-            <CardContent className="pt-5 space-y-3">
+            <CardContent className="pt-4 sm:pt-5 space-y-3 px-4 sm:px-6">
               {data.education.map((edu, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="grid grid-cols-3 gap-2 p-3 rounded-2xl bg-slate-50 border border-slate-100"
+                  className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-3 rounded-2xl bg-slate-50 border border-slate-100"
                 >
                   <Input
                     placeholder="School/Uni"
@@ -5221,7 +5786,7 @@ function ResumeBuilder({ user, setView }) {
                       newEdu[i].school = e.target.value;
                       setData({ ...data, education: newEdu });
                     }}
-                    className="col-span-1 h-10 rounded-xl border-slate-200 bg-white text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                    className="sm:col-span-1 h-10 rounded-xl border-slate-200 bg-white text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                   />
                   <Input
                     placeholder="Degree"
@@ -5231,7 +5796,7 @@ function ResumeBuilder({ user, setView }) {
                       newEdu[i].degree = e.target.value;
                       setData({ ...data, education: newEdu });
                     }}
-                    className="col-span-1 h-10 rounded-xl border-slate-200 bg-white text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                    className="sm:col-span-1 h-10 rounded-xl border-slate-200 bg-white text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                   />
                   <Input
                     placeholder="Year"
@@ -5241,7 +5806,7 @@ function ResumeBuilder({ user, setView }) {
                       newEdu[i].year = e.target.value;
                       setData({ ...data, education: newEdu });
                     }}
-                    className="col-span-1 h-10 rounded-xl border-slate-200 bg-white text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                    className="sm:col-span-1 h-10 rounded-xl border-slate-200 bg-white text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                   />
                 </motion.div>
               ))}
@@ -5249,7 +5814,7 @@ function ResumeBuilder({ user, setView }) {
           </Card>
 
           <Card className="border border-slate-100 shadow-xl shadow-slate-200/40 rounded-3xl overflow-hidden bg-white">
-            <CardHeader className="border-b border-slate-100 pb-4 bg-gradient-to-br from-amber-50 to-orange-50">
+            <CardHeader className="border-b border-slate-100 pb-3 sm:pb-4 px-4 sm:px-6 bg-gradient-to-br from-amber-50 to-orange-50">
               <div className="flex items-center gap-2.5">
                 <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-md flex-shrink-0">
                   <Zap className="h-4 w-4 text-white" />
@@ -5257,7 +5822,7 @@ function ResumeBuilder({ user, setView }) {
                 <CardTitle className="text-base font-bold tracking-tight">Skills</CardTitle>
               </div>
             </CardHeader>
-            <CardContent className="pt-5 space-y-3">
+            <CardContent className="pt-4 sm:pt-5 space-y-3 px-4 sm:px-6">
               <Textarea
                 value={data.skills}
                 onChange={(e) => setData({ ...data, skills: e.target.value })}
@@ -5279,8 +5844,8 @@ function ResumeBuilder({ user, setView }) {
         </div>
 
         {/* PREVIEW SIDE */}
-        <div className="lg:sticky lg:top-24 lg:h-[1100px] print:h-auto print:static">
-          <div className="hidden lg:flex items-center justify-between mb-3 print:hidden">
+        <div className="lg:sticky lg:top-24 lg:h-[1100px] print:h-auto print:static min-w-0 w-full">
+          <div className="flex items-center justify-between mb-2 sm:mb-3 print:hidden">
             <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
               <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
               Live Preview
@@ -5289,7 +5854,35 @@ function ResumeBuilder({ user, setView }) {
               {template === "modern" ? "Modern Professional" : template === "classic" ? "Classic Executive" : "Clean & Minimal"}
             </div>
           </div>
-          <div className="bg-white shadow-2xl shadow-slate-300/50 rounded-2xl h-full overflow-y-auto print:shadow-none print:rounded-none overflow-x-hidden p-[40px] resume-preview border border-slate-100 print:border-0">
+          {/* Mobile scaled preview */}
+          <div className="lg:hidden bg-slate-100 shadow-2xl shadow-slate-300/50 rounded-2xl border border-slate-100 overflow-hidden print:hidden w-full max-w-full">
+            <div className="h-[480px] overflow-auto p-3 max-w-full">
+              <div
+                style={{
+                  width: "794px",
+                  transformOrigin: "top left",
+                }}
+                className="origin-top-left transform scale-[0.4] sm:scale-[0.6] bg-white shadow-md rounded-md p-[40px] resume-preview-mobile"
+              >
+                {template === "modern" && <ModernTemplate data={data} />}
+                {template === "classic" && <ClassicTemplate data={data} />}
+                {template === "creative" && <CreativeTemplate data={data} />}
+              </div>
+            </div>
+            <div className="bg-slate-50 border-t border-slate-100 px-4 py-2.5 text-center">
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                Preview scaled · Download PDF for full size
+              </p>
+            </div>
+          </div>
+          {/* Desktop preview */}
+          <div className="hidden lg:block bg-white shadow-2xl shadow-slate-300/50 rounded-2xl h-full overflow-y-auto print:shadow-none print:rounded-none overflow-x-hidden p-[40px] resume-preview border border-slate-100 print:border-0">
+            {template === "modern" && <ModernTemplate data={data} />}
+            {template === "classic" && <ClassicTemplate data={data} />}
+            {template === "creative" && <CreativeTemplate data={data} />}
+          </div>
+          {/* Print-only full preview */}
+          <div className="hidden print:block resume-preview p-[40px]">
             {template === "modern" && <ModernTemplate data={data} />}
             {template === "classic" && <ClassicTemplate data={data} />}
             {template === "creative" && <CreativeTemplate data={data} />}
@@ -5649,19 +6242,19 @@ function AboutPage({ setView }) {
   return (
     <div className="bg-white">
       {/* HERO SECTION */}
-      <section className="relative py-24 overflow-hidden bg-slate-50">
+      <section className="relative py-12 sm:py-20 lg:py-24 overflow-hidden bg-slate-50">
         <div className="absolute top-0 right-0 w-1/3 h-full bg-indigo-600/5 -skew-x-12 translate-x-32" />
-        <div className="container mx-auto px-6 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <div className="max-w-3xl">
             <Badge className="mb-4 bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-50 px-4 py-1.5 rounded-full font-bold uppercase tracking-widest text-xs">
               Our Mission
             </Badge>
-            <h1 className="text-5xl lg:text-7xl font-black text-slate-900 mb-8 leading-[1.1]">
+            <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black text-slate-900 mb-6 sm:mb-8 leading-tight sm:leading-[1.1]">
               Bridging the gap in{" "}
               <span className="text-indigo-600">Healthcare RCM</span>{" "}
               excellence.
             </h1>
-            <p className="text-xl text-slate-600 leading-relaxed mb-10">
+            <p className="text-base sm:text-lg lg:text-xl text-slate-600 leading-relaxed mb-8 sm:mb-10">
               RCM Job is the world's first specialized ecosystem designed
               exclusively for Revenue Cycle Management professionals. We combine
               elite job connections with world-class education and a vibrant
@@ -5682,7 +6275,7 @@ function AboutPage({ setView }) {
       {/* WHAT WE DO */}
       <section className="py-24 bg-slate-900 text-white overflow-hidden relative">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20" />
-        <div className="container mx-auto px-6 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <div>
               <h2 className="text-4xl lg:text-5xl font-bold mb-8 leading-tight">
@@ -5717,7 +6310,7 @@ function AboutPage({ setView }) {
       </section>
 
       {/* CORE VALUES */}
-      <section className="py-24 container mx-auto px-6">
+      <section className="py-24 container mx-auto px-4 sm:px-6">
         <div className="text-center mb-20">
           <h2 className="text-sm font-black text-indigo-600 uppercase tracking-[0.3em] mb-4">
             Why We Exist
@@ -5818,24 +6411,24 @@ function ContactPage({ setView }) {
   return (
     <div className="bg-white min-h-screen">
       {/* HEADER */}
-      <section className="bg-slate-900 py-20 relative overflow-hidden">
+      <section className="bg-slate-900 py-12 sm:py-20 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-indigo-600/10 skew-x-12 translate-x-32" />
-        <div className="container mx-auto px-6 relative z-10 text-center">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10 text-center">
           <Badge className="mb-4 bg-indigo-500/20 text-indigo-300 border-indigo-500/30 px-4 py-1.5 rounded-full font-bold uppercase tracking-widest text-xs">
             Contact Us
           </Badge>
-          <h1 className="text-5xl lg:text-6xl font-black text-white mb-6">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white mb-4 sm:mb-6">
             Get in <span className="text-indigo-400">touch</span>
           </h1>
-          <p className="text-slate-400 max-w-2xl mx-auto text-lg">
+          <p className="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base lg:text-lg">
             Have questions about RCM Job or the Academy? Our team is here to
             help you navigate your professional journey.
           </p>
         </div>
       </section>
 
-      <section className="py-24 container mx-auto px-6">
-        <div className="grid lg:grid-cols-12 gap-16">
+      <section className="py-12 sm:py-20 lg:py-24 container mx-auto px-4 sm:px-6">
+        <div className="grid lg:grid-cols-12 gap-10 sm:gap-16">
           {/* CONTACT INFO */}
           <div className="lg:col-span-5 space-y-12">
             <div>
@@ -5987,7 +6580,7 @@ function SocialBtn({ icon: Icon }) {
 function PrivacyPage() {
   return (
     <div className="min-h-screen bg-slate-50 py-20">
-      <div className="container mx-auto px-6 max-w-4xl">
+      <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
         <Card className="border-none shadow-2xl shadow-slate-200/50 rounded-[2.5rem] overflow-hidden bg-white p-12 lg:p-20">
           <Badge className="mb-6 bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-50 px-4 py-1.5 rounded-full font-bold uppercase tracking-widest text-xs">
             Security First
@@ -6057,7 +6650,7 @@ function PrivacyPage() {
 function TermsPage() {
   return (
     <div className="min-h-screen bg-slate-50 py-20">
-      <div className="container mx-auto px-6 max-w-4xl">
+      <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
         <Card className="border-none shadow-2xl shadow-slate-200/50 rounded-[2.5rem] overflow-hidden bg-white p-12 lg:p-20">
           <Badge className="mb-6 bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-50 px-4 py-1.5 rounded-full font-bold uppercase tracking-widest text-xs">
             Legal Agreement
@@ -6146,7 +6739,7 @@ function CompaniesList({ setView, setSelectedCompany }) {
   return (
     <div className="bg-[#F8F9FE] min-h-screen pb-20">
       {/* Hero Header */}
-      <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 pt-32 pb-44 relative overflow-hidden">
+      <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 pt-12 sm:pt-20 lg:pt-32 pb-28 sm:pb-36 lg:pb-44 relative overflow-hidden">
         {/* Decorative Background Elements */}
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-indigo-500/20 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-blue-500/15 rounded-full blur-[100px] pointer-events-none" />
@@ -6170,15 +6763,15 @@ function CompaniesList({ setView, setSelectedCompany }) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="container mx-auto px-6 text-center relative z-10"
+          className="container mx-auto px-4 sm:px-6 text-center relative z-10"
         >
           <Badge className="bg-white/10 text-indigo-300 border-white/10 mb-6 px-4 py-1.5 rounded-full backdrop-blur-md uppercase tracking-widest text-[10px] font-bold">
             <Building2 className="h-3 w-3 mr-2" /> Connect with Industry Leaders
           </Badge>
-          <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6 tracking-tight leading-[1.05]">
+          <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white mb-6 tracking-tight leading-tight sm:leading-[1.05]">
             Top <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-blue-400 to-cyan-400">Companies</span>
           </h1>
-          <p className="text-slate-400 font-semibold max-w-2xl mx-auto text-lg leading-relaxed">
+          <p className="text-slate-400 font-semibold max-w-2xl mx-auto text-sm sm:text-base lg:text-lg leading-relaxed">
             Discover verified companies and explore high-growth opportunities across the RCM ecosystem.
           </p>
 
@@ -6203,7 +6796,7 @@ function CompaniesList({ setView, setSelectedCompany }) {
       </div>
 
       {/* Floating Search Bar */}
-      <div className="container mx-auto px-6 max-w-4xl -mt-16 relative z-20">
+      <div className="container mx-auto px-4 sm:px-6 max-w-4xl -mt-16 relative z-20">
         <div className="bg-white rounded-3xl p-4 shadow-2xl shadow-indigo-900/10 flex flex-col sm:flex-row items-center border border-slate-100 gap-4 sm:gap-0">
           <div className="flex-1 flex items-center gap-4 px-6 py-3 sm:border-r border-slate-100 w-full">
             <Search className="h-5 w-5 text-indigo-600" />
@@ -6225,7 +6818,7 @@ function CompaniesList({ setView, setSelectedCompany }) {
         </div>
       </div>
 
-      <section className="container mx-auto px-6 py-16 max-w-7xl">
+      <section className="container mx-auto px-4 sm:px-6 py-16 max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -6363,7 +6956,7 @@ function CompanyDetails({ company, setView, setSelectedJobId }) {
           }}
         />
 
-        <div className="container mx-auto px-6 max-w-7xl relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 max-w-7xl relative z-10">
           <Button
             variant="ghost"
             onClick={() => setView("companies_view")}
@@ -6430,7 +7023,7 @@ function CompanyDetails({ company, setView, setSelectedJobId }) {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-6 max-w-7xl -mt-12 relative z-20">
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl -mt-12 relative z-20">
         <div className="grid md:grid-cols-3 gap-6">
           <div className="md:col-span-1 space-y-6">
             <Card className="rounded-2xl border-slate-100 shadow-xl shadow-slate-100/30 overflow-hidden bg-white group hover:border-indigo-100 transition-all duration-300">
@@ -6528,7 +7121,7 @@ function DataListView({ type, title, setView, setSelectedJobId }) {
   const Icon = icons[type] || Layers;
 
   return (
-    <section className="container mx-auto px-6 py-16">
+    <section className="container mx-auto px-4 sm:px-6 py-16">
       <div className="flex items-center gap-4 mb-10">
         <Button variant="ghost" onClick={() => setView("home")}>
           ← Back
@@ -6663,17 +7256,17 @@ function CommunityHub({ setView, user }) {
   };
 
   return (
-    <div className="bg-[#F8F9FE] min-h-screen pb-20 pt-16">
-      <div className="container mx-auto px-6 max-w-5xl">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-          <div>
+    <div className="bg-[#F8F9FE] min-h-screen pb-20 pt-10 sm:pt-16">
+      <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 gap-5 sm:gap-6">
+          <div className="min-w-0">
             <Badge className="bg-indigo-50 text-indigo-600 border-none px-4 py-1.5 rounded-full mb-4 text-[10px] font-bold uppercase tracking-widest">
               Professional Network
             </Badge>
-            <h1 className="text-5xl font-bold text-slate-900 mb-4 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-3 sm:mb-4 tracking-tight">
               Community <span className="text-indigo-600">Hub</span>
             </h1>
-            <p className="text-slate-500 font-medium text-lg">
+            <p className="text-slate-500 font-medium text-sm sm:text-base lg:text-lg">
               Connect with RCM professionals, share insights, and grow together.
             </p>
           </div>
@@ -6870,24 +7463,24 @@ function RewardsPage({ setView, user }) {
 
   return (
     <div className="bg-white min-h-screen">
-      <section className="bg-indigo-600 py-24 relative overflow-hidden">
+      <section className="bg-indigo-600 py-12 sm:py-20 lg:py-24 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-64 h-64 bg-white rounded-full -translate-x-1/2 -translate-y-1/2" />
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full translate-x-1/2 translate-y-1/2" />
         </div>
 
-        <div className="container mx-auto px-6 relative z-10 text-center text-white">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-8">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10 text-center text-white">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-6 sm:mb-8">
             <Sparkles className="h-4 w-4 text-amber-300" />
-            <span className="text-sm font-bold tracking-widest uppercase">
+            <span className="text-xs sm:text-sm font-bold tracking-widest uppercase">
               Referral Program
             </span>
           </div>
-          <h1 className="text-5xl lg:text-7xl font-bold mb-8 leading-tight">
-            Invite your friends <br /> & Earn{" "}
+          <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold mb-6 sm:mb-8 leading-tight">
+            Invite your friends <br className="hidden sm:block" /> & Earn{" "}
             <span className="text-amber-300">Rewards</span>
           </h1>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto mb-12 leading-relaxed">
+          <p className="text-base sm:text-lg lg:text-xl text-white/80 max-w-2xl mx-auto mb-10 sm:mb-12 leading-relaxed">
             Help your colleagues find their dream jobs and get exclusive premium
             perks for every successful referral.
           </p>
@@ -6906,7 +7499,7 @@ function RewardsPage({ setView, user }) {
         </div>
       </section>
 
-      <section className="py-24 container mx-auto px-6">
+      <section className="py-24 container mx-auto px-4 sm:px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-slate-900 mb-4">
             How it works
@@ -6955,7 +7548,7 @@ function RewardsPage({ setView, user }) {
       </section>
 
       <section className="py-24 bg-slate-50">
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-slate-900 mb-4">
               Rewards Tiers
@@ -7002,7 +7595,7 @@ function RewardsPage({ setView, user }) {
         </div>
       </section>
 
-      <section className="py-24 container mx-auto px-6 text-center">
+      <section className="py-24 container mx-auto px-4 sm:px-6 text-center">
         <Card className="bg-slate-900 text-white p-12 lg:p-24 rounded-[3rem] overflow-hidden relative">
           <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl -mr-32 -mt-32" />
           <h2 className="text-4xl lg:text-6xl font-bold mb-8 relative z-10">
@@ -7563,7 +8156,7 @@ function QuizGame({ category, onBack, userPoints, setUserPoints }) {
     <div className="min-h-screen bg-[#0F172A]">
       <GameHeader userPoints={userPoints} onBack={onBack} title="Expert Quiz" subtitle={`Mastering ${category}`} />
 
-      <div className="container mx-auto px-6 py-12 max-w-2xl">
+      <div className="container mx-auto px-4 sm:px-6 py-12 max-w-2xl">
         <div className="mb-12">
           <div className="flex items-center justify-between mb-4">
             <Badge className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20 px-4 py-1.5 rounded-full uppercase tracking-[0.2em] text-[10px] font-bold">
@@ -7666,7 +8259,7 @@ function StreakRush({ onBack, userPoints, setUserPoints }) {
     <div className="min-h-screen bg-[#0F172A]">
       <GameHeader userPoints={userPoints} onBack={onBack} title="Streak Rush" subtitle="How long can you last?" />
 
-      <div className="container mx-auto px-6 py-20 max-w-2xl">
+      <div className="container mx-auto px-4 sm:px-6 py-20 max-w-2xl">
         <div className="mb-10 text-center">
           <div className="text-5xl font-black text-rose-500 mb-2 drop-shadow-lg animate-pulse">{streak}</div>
           <div className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">Current Streak</div>
@@ -7734,7 +8327,7 @@ function GameHub({ onBack, setView, userPoints, setUserPoints }) {
     <div className="bg-[#0F172A] min-h-screen overflow-hidden">
       <GameHeader userPoints={userPoints} onBack={onBack} title="RCM Game Hub" subtitle="Spin to unlock new career challenges." />
 
-      <div className="container mx-auto px-6 py-24 text-center">
+      <div className="container mx-auto px-4 sm:px-6 py-24 text-center">
         <Badge className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20 mb-6 px-4 py-1.5 rounded-full uppercase tracking-[0.2em] text-[10px] font-bold">
           Available Game Modes
         </Badge>
@@ -7949,7 +8542,7 @@ function SpinWheel({ onBack, onSelected, userPoints }) {
       </div>
 
       {/* Category Legend - Enhanced Design */}
-      <div className="container mx-auto px-6 pb-32 max-w-6xl">
+      <div className="container mx-auto px-4 sm:px-6 pb-32 max-w-6xl">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((cat, i) => (
             <div

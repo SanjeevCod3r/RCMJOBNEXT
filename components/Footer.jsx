@@ -2,9 +2,9 @@ import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from 'luc
 
 export default function Footer({ setView }) {
   return (
-    <footer className="bg-slate-900 pt-20 pb-10">
-      <div className="container mx-auto px-6">
-        <div className="grid lg:grid-cols-4 gap-12 mb-16">
+    <footer className="bg-slate-900 pt-12 sm:pt-20 pb-10">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-12 mb-12 sm:mb-16">
           {/* Logo & Description */}
           <div className="space-y-6 lg:col-span-1">
             <button onClick={() => setView?.('home')} className="flex items-center gap-3 group">
@@ -64,7 +64,7 @@ export default function Footer({ setView }) {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-10 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6">
+        <div className="pt-8 sm:pt-10 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 text-center md:text-left">
           <p className="text-slate-500 text-sm font-medium tracking-wide">
             © {new Date().getFullYear()} RCMJOB. All rights reserved.
           </p>
