@@ -936,123 +936,6 @@ function Home({
         </section>
       )}
 
-      {/* POST JOB CTA BANNER */}
-      <section className="py-12 container mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6 }}
-          className="bg-gradient-to-br from-indigo-600 via-indigo-700 to-blue-700 rounded-[2.5rem] overflow-hidden relative min-h-[420px] flex items-center shadow-2xl shadow-indigo-600/30"
-        >
-          {/* Decorative orbs */}
-          <div className="absolute top-0 left-0 w-64 h-64 bg-pink-500/20 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-          <div className="absolute bottom-0 right-1/3 w-72 h-72 bg-blue-400/20 rounded-full blur-[100px] translate-y-1/2 pointer-events-none" />
-
-          {/* Subtle grid pattern */}
-          <div
-            className="absolute inset-0 opacity-[0.08] pointer-events-none"
-            style={{
-              backgroundImage: "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
-              backgroundSize: "40px 40px"
-            }}
-          />
-
-          <div className="absolute top-0 right-0 w-1/2 h-full hidden lg:block">
-            <div className="absolute inset-0 bg-white/10 skew-x-12 translate-x-32" />
-            <img
-              src="/assests/3.1 Dashboard Company.jpg"
-              alt="Dashboard"
-              className="absolute inset-0 w-full h-full mix-blend-overlay opacity-50"
-            />
-          </div>
-
-          {/* Floating decorative badges */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            whileInView={{ opacity: 1, scale: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.45 }}
-            className="hidden xl:flex absolute top-12 right-12 items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-5 py-3 shadow-xl"
-          >
-            <div className="h-10 w-10 rounded-xl bg-emerald-400/20 flex items-center justify-center">
-              <CheckCircle className="h-5 w-5 text-emerald-300" />
-            </div>
-            <div className="text-left">
-              <div className="text-[10px] font-bold uppercase tracking-widest text-white/70">Verified Talent</div>
-              <div className="text-sm font-bold text-white">10,000+ Candidates</div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            whileInView={{ opacity: 1, scale: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.55 }}
-            className="hidden xl:flex absolute bottom-12 right-24 items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-5 py-3 shadow-xl"
-          >
-            <div className="h-10 w-10 rounded-xl bg-amber-400/20 flex items-center justify-center">
-              <Star className="h-5 w-5 text-amber-300 fill-amber-300" />
-            </div>
-            <div className="text-left">
-              <div className="text-[10px] font-bold uppercase tracking-widest text-white/70">Trusted by</div>
-              <div className="text-sm font-bold text-white">500+ Companies</div>
-            </div>
-          </motion.div>
-
-          <div className="relative z-10 px-8 md:px-12 lg:px-24 py-16 lg:w-3/5 text-white">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-6"
-            >
-              <Sparkles className="h-3.5 w-3.5 text-amber-300" />
-              <span className="text-xs font-bold text-white uppercase tracking-widest">For Employers</span>
-            </motion.div>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.15 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight tracking-tight"
-            >
-              Start posting <br /> jobs today
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.25 }}
-              className="text-lg lg:text-xl text-white/80 mb-10 max-w-md leading-relaxed"
-            >
-              Connect with thousands of certified professionals and grow your
-              team with the best RCM talent in the industry.
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.35 }}
-              className="flex flex-wrap items-center gap-4"
-            >
-              <Button
-                onClick={() => setView("register")}
-                className="bg-white text-indigo-600 hover:bg-slate-50 h-14 px-10 rounded-2xl font-bold text-lg shadow-xl shadow-black/20 transition-all hover:scale-105 active:scale-95 group"
-              >
-                Sign up for free
-                <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition" />
-              </Button>
-              <div className="flex items-center gap-2 text-white/80 text-sm font-medium">
-                <CheckCircle className="h-4 w-4 text-emerald-300" />
-                No credit card required
-              </div>
-            </motion.div>
-          </div>
-        </motion.div>
-      </section>
-
       <TopCompanies />
 
       {/* FEATURED JOBS SECTION */}
@@ -1458,6 +1341,124 @@ function Home({
           </div>
         </div>
       </section>
+
+      {/* POST JOB CTA BANNER */}
+      <section className="py-12 container mx-auto px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.6 }}
+          className="bg-gradient-to-br from-indigo-600 via-indigo-700 to-blue-700 rounded-[2.5rem] overflow-hidden relative min-h-[420px] flex items-center shadow-2xl shadow-indigo-600/30"
+        >
+          {/* Decorative orbs */}
+          <div className="absolute top-0 left-0 w-64 h-64 bg-pink-500/20 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+          <div className="absolute bottom-0 right-1/3 w-72 h-72 bg-blue-400/20 rounded-full blur-[100px] translate-y-1/2 pointer-events-none" />
+
+          {/* Subtle grid pattern */}
+          <div
+            className="absolute inset-0 opacity-[0.08] pointer-events-none"
+            style={{
+              backgroundImage: "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
+              backgroundSize: "40px 40px"
+            }}
+          />
+
+          <div className="absolute top-0 right-0 w-1/2 h-full hidden lg:block">
+            <div className="absolute inset-0 bg-white/10 skew-x-12 translate-x-32" />
+            <img
+              src="/assests/3.1 Dashboard Company.jpg"
+              alt="Dashboard"
+              className="absolute inset-0 w-full h-full mix-blend-overlay opacity-50"
+            />
+          </div>
+
+          {/* Floating decorative badges */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            whileInView={{ opacity: 1, scale: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.45 }}
+            className="hidden xl:flex absolute top-12 right-12 items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-5 py-3 shadow-xl"
+          >
+            <div className="h-10 w-10 rounded-xl bg-emerald-400/20 flex items-center justify-center">
+              <CheckCircle className="h-5 w-5 text-emerald-300" />
+            </div>
+            <div className="text-left">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-white/70">Verified Talent</div>
+              <div className="text-sm font-bold text-white">10,000+ Candidates</div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            whileInView={{ opacity: 1, scale: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.55 }}
+            className="hidden xl:flex absolute bottom-12 right-24 items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-5 py-3 shadow-xl"
+          >
+            <div className="h-10 w-10 rounded-xl bg-amber-400/20 flex items-center justify-center">
+              <Star className="h-5 w-5 text-amber-300 fill-amber-300" />
+            </div>
+            <div className="text-left">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-white/70">Trusted by</div>
+              <div className="text-sm font-bold text-white">500+ Companies</div>
+            </div>
+          </motion.div>
+
+          <div className="relative z-10 px-8 md:px-12 lg:px-24 py-16 lg:w-3/5 text-white">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-6"
+            >
+              <Sparkles className="h-3.5 w-3.5 text-amber-300" />
+              <span className="text-xs font-bold text-white uppercase tracking-widest">For Employers</span>
+            </motion.div>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight tracking-tight"
+            >
+              Start posting <br /> jobs today
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.25 }}
+              className="text-lg lg:text-xl text-white/80 mb-10 max-w-md leading-relaxed"
+            >
+              Connect with thousands of certified professionals and grow your
+              team with the best RCM talent in the industry.
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.35 }}
+              className="flex flex-wrap items-center gap-4"
+            >
+              <Button
+                onClick={() => setView("register")}
+                className="bg-white text-indigo-600 hover:bg-slate-50 h-14 px-10 rounded-2xl font-bold text-lg shadow-xl shadow-black/20 transition-all hover:scale-105 active:scale-95 group"
+              >
+                Sign up for free
+                <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition" />
+              </Button>
+              <div className="flex items-center gap-2 text-white/80 text-sm font-medium">
+                <CheckCircle className="h-4 w-4 text-emerald-300" />
+                No credit card required
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+      </section>
+
     </div>
   );
 }
@@ -1628,12 +1629,12 @@ const TOP_COMPANIES = [
       {
         name: "Spotify",
         jobs: "321",
-        logo: "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_with_text.svg",
+        logo: "/assests/spotify.png",
       },
       {
         name: "Reddit",
         jobs: "210",
-        logo: "https://upload.wikimedia.org/wikipedia/commons/5/58/Reddit_logo_new.svg",
+        logo: "/assests/reddit.png",
       },
     ],
   },
@@ -1853,12 +1854,11 @@ function JobCard({ job, onClick, featuredIndex }) {
       {/* Header Section */}
       <div className="flex items-start justify-between mb-6">
         <div className="flex items-center gap-4">
-          <div className="h-14 w-14 flex-shrink-0 rounded-2xl bg-gradient-to-br from-slate-50 to-white border border-slate-100 shadow-sm flex items-center justify-center p-2.5 group-hover:scale-105 transition duration-500">
-            {job.logo ? (
-              <img src={job.logo} alt={job.companyName} className="w-full h-full object-contain" />
-            ) : (
-              <div className="font-bold text-xl text-indigo-600">{(job.companyName || "C").charAt(0)}</div>
-            )}
+          <div className="h-14 w-14 flex-shrink-0 rounded-2xl bg-gradient-to-br from-slate-50 to-white border border-slate-100 shadow-sm flex items-center justify-center p-2.5 group-hover:scale-105 transition duration-500 overflow-hidden">
+            {(job.logo || job.companyLogo) ? (
+              <img src={job.logo || job.companyLogo} alt={job.companyName} className="w-full h-full object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling.style.display = 'flex'; }} />
+            ) : null}
+            <div className={`font-bold text-xl text-indigo-600 ${(job.logo || job.companyLogo) ? 'hidden' : 'flex items-center justify-center w-full h-full'}`}>{(job.companyName || "C").charAt(0)}</div>
           </div>
           <div className="min-w-0">
             <h3 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition truncate leading-tight">
@@ -2342,18 +2342,18 @@ function JobDetails({ jobId, setView, user, onApplied }) {
               className="relative"
             >
               <div className="absolute -inset-1.5 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-500 blur-lg opacity-40" />
-              <div className="relative h-20 w-20 rounded-2xl bg-white flex items-center justify-center p-3 shadow-xl border-4 border-white/10 group hover:rotate-3 transition-transform duration-500">
-                {job.logo ? (
+              <div className="relative h-20 w-20 rounded-2xl bg-white flex items-center justify-center p-3 shadow-xl border-4 border-white/10 group hover:rotate-3 transition-transform duration-500 overflow-hidden">
+                {(job.logo || job.companyLogo) ? (
                   <img
-                    src={job.logo}
+                    src={job.logo || job.companyLogo}
                     alt={job.companyName}
                     className="w-full h-full object-contain"
+                    onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling.style.display = 'flex'; }}
                   />
-                ) : (
-                  <div className="font-black text-3xl text-indigo-600">
-                    {(job.companyName || "C").charAt(0)}
-                  </div>
-                )}
+                ) : null}
+                <div className={`font-black text-3xl text-indigo-600 ${(job.logo || job.companyLogo) ? 'hidden' : 'flex items-center justify-center w-full h-full'}`}>
+                  {(job.companyName || "C").charAt(0)}
+                </div>
               </div>
             </motion.div>
             <motion.div
@@ -2992,8 +2992,18 @@ function CandidateDashboard({ user, setView, setSelectedJobId }) {
                         <div className="flex items-center gap-4 min-w-0">
                           <div className="relative flex-shrink-0">
                             <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-br from-indigo-500/0 to-blue-500/0 group-hover:from-indigo-500/40 group-hover:to-blue-500/40 blur transition" />
-                            <div className="relative h-12 w-12 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-center font-bold text-indigo-600 text-lg">
-                              {a.companyName?.charAt(0)}
+                            <div className="relative h-12 w-12 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-center font-bold text-indigo-600 text-lg overflow-hidden p-1">
+                              {(a.companyLogo || a.logo) ? (
+                                <img
+                                  src={a.companyLogo || a.logo}
+                                  alt={a.companyName}
+                                  className="w-full h-full object-contain"
+                                  onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling.style.display = 'flex'; }}
+                                />
+                              ) : null}
+                              <span className={(a.companyLogo || a.logo) ? 'hidden' : 'flex items-center justify-center w-full h-full'}>
+                                {a.companyName?.charAt(0)}
+                              </span>
                             </div>
                           </div>
                           <div className="min-w-0">
@@ -3157,10 +3167,19 @@ function ProfilePage({ user, setUser, setView }) {
       const fd = new FormData();
       fd.append("file", file);
       const r = await api("/upload/resume", { method: "POST", body: fd });
-      setProfile((p) => ({ ...p, resumeUrl: r.url, resumeName: r.name }));
-      toast.success("Resume uploaded!");
+      // Persist immediately so user doesn't have to click Save Changes
+      const updated = { ...profile, resumeUrl: r.url, resumeName: r.name };
+      setProfile(updated);
+      const body = {
+        ...updated,
+        skills: updated.skills
+          ? updated.skills.split(",").map((s) => s.trim())
+          : [],
+      };
+      await api("/profile", { method: "PUT", body: JSON.stringify(body) });
+      toast.success("Resume uploaded & saved!");
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err.message || "Upload failed");
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
@@ -3602,6 +3621,16 @@ function EmployerDashboard({
   const [company, setCompany] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const isPremium = !!(user?.isPremium || user?.premium);
+
+  const handlePostJob = () => {
+    if (!isPremium) {
+      toast.error("Premium subscription required to post jobs");
+      return setView("premium");
+    }
+    setView("postJob");
+  };
+
   const load = async () => {
     try {
       // FIX: Call /api/jobs/mine to get accurate applicant counts for the employer
@@ -3662,12 +3691,50 @@ function EmployerDashboard({
               </p>
             </div>
             <Button
-              onClick={() => setView("postJob")}
-              className="bg-white text-indigo-600 hover:bg-slate-50 h-12 px-6 rounded-xl font-bold shadow-xl shadow-black/20 transition-all hover:scale-[1.02] group self-start md:self-auto"
+              onClick={handlePostJob}
+              className={`h-12 px-6 rounded-xl font-bold shadow-xl shadow-black/20 transition-all hover:scale-[1.02] group self-start md:self-auto ${
+                isPremium
+                  ? "bg-white text-indigo-600 hover:bg-slate-50"
+                  : "bg-gradient-to-r from-amber-400 to-amber-500 text-amber-950 hover:from-amber-500 hover:to-amber-600"
+              }`}
             >
-              <Plus className="h-5 w-5 mr-2 group-hover:rotate-90 transition-transform duration-300" /> Post a New Job
+              {isPremium ? (
+                <>
+                  <Plus className="h-5 w-5 mr-2 group-hover:rotate-90 transition-transform duration-300" /> Post a New Job
+                </>
+              ) : (
+                <>
+                  <Crown className="h-5 w-5 mr-2" /> Upgrade to Post Jobs
+                </>
+              )}
             </Button>
           </div>
+
+          {/* Premium gate banner */}
+          {!isPremium && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="mt-6 bg-gradient-to-r from-amber-400/20 to-orange-400/20 backdrop-blur-md border border-amber-300/40 rounded-2xl p-4 flex items-center justify-between gap-4"
+            >
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md flex-shrink-0">
+                  <Crown className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-white">Subscribe to post jobs</div>
+                  <div className="text-xs text-amber-100/80">Unlock unlimited job postings, premium placement and verified applicants.</div>
+                </div>
+              </div>
+              <Button
+                onClick={() => setView("premium")}
+                className="bg-white text-amber-700 hover:bg-amber-50 h-10 px-4 rounded-xl font-bold text-sm shadow-md flex-shrink-0"
+              >
+                View Plans <ArrowRight className="h-4 w-4 ml-1" />
+              </Button>
+            </motion.div>
+          )}
 
           {/* Stat strip */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10">
@@ -3824,12 +3891,20 @@ function EmployerDashboard({
                       <Briefcase className="h-8 w-8 text-indigo-600" />
                     </div>
                     <h3 className="text-xl font-bold text-slate-900 mb-2 tracking-tight">No jobs posted yet</h3>
-                    <p className="text-slate-500 text-Enhance the design for pages that when I login as candidate the design for condiate  dashboard , edit profile and resume buildersm mb-6">Post your first job to start hiring talent.</p>
+                    <p className="text-slate-500 text-sm mb-6">{isPremium ? "Post your first job to start hiring talent." : "Subscribe to premium to start posting jobs."}</p>
                     <Button
-                      onClick={() => setView("postJob")}
-                      className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white h-11 px-6 rounded-xl font-bold shadow-lg shadow-indigo-200"
+                      onClick={handlePostJob}
+                      className={`h-11 px-6 rounded-xl font-bold shadow-lg ${
+                        isPremium
+                          ? "bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white shadow-indigo-200"
+                          : "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-amber-200"
+                      }`}
                     >
-                      <Plus className="h-4 w-4 mr-2" /> Post Your First Job
+                      {isPremium ? (
+                        <><Plus className="h-4 w-4 mr-2" /> Post Your First Job</>
+                      ) : (
+                        <><Crown className="h-4 w-4 mr-2" /> Subscribe to Post Jobs</>
+                      )}
                     </Button>
                   </div>
                 </Card>
@@ -4096,7 +4171,10 @@ function PostJobPage({ user, setView }) {
   const [company, setCompany] = useState(null);
   const [categories, setCategories] = useState([]);
 
+  const isPremium = !!(user?.isPremium || user?.premium);
+
   useEffect(() => {
+    if (!isPremium) return;
     api("/employer/company")
       .then((d) => setCompany(d.company))
       .catch(() => { });
@@ -4107,10 +4185,86 @@ function PostJobPage({ user, setView }) {
         if (all.length > 0) setCategory(all[0]);
       })
       .catch(() => { });
-  }, []);
+  }, [isPremium]);
+
+  // Premium gate: block the page entirely if user is not premium
+  if (!isPremium) {
+    return (
+      <section className="min-h-screen bg-[#F8F9FD] py-16">
+        <div className="container mx-auto px-6 max-w-3xl">
+          <Button
+            onClick={() => setView("employerDash")}
+            variant="ghost"
+            className="mb-6 h-9 px-4 rounded-xl border border-slate-200 text-xs font-bold uppercase tracking-widest text-slate-600 group"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 mr-2 group-hover:-translate-x-1 transition-transform" />
+            Back to Dashboard
+          </Button>
+          <Card className="bg-white border border-amber-200 rounded-3xl shadow-2xl shadow-amber-200/30 overflow-hidden">
+            <div className="bg-gradient-to-br from-amber-400 via-amber-500 to-orange-500 p-10 text-center relative overflow-hidden">
+              <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/20 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+              <div className="relative z-10">
+                <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 mb-5 shadow-xl">
+                  <Crown className="h-8 w-8 text-white" />
+                </div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 border border-white/30 backdrop-blur-md mb-4">
+                  <Sparkles className="h-3 w-3 text-white" />
+                  <span className="text-[10px] font-bold text-white uppercase tracking-widest">Premium Required</span>
+                </div>
+                <h1 className="text-3xl lg:text-4xl font-bold text-white tracking-tight mb-3">
+                  Upgrade to Post Jobs
+                </h1>
+                <p className="text-white/90 text-base font-medium max-w-md mx-auto">
+                  A premium subscription is required to post jobs. Unlock unlimited listings and reach verified candidates.
+                </p>
+              </div>
+            </div>
+            <CardContent className="p-8">
+              <div className="grid sm:grid-cols-2 gap-3 mb-7">
+                {[
+                  { icon: Briefcase, text: "Unlimited job postings" },
+                  { icon: Users, text: "Verified RCM candidates" },
+                  { icon: Sparkles, text: "Premium placement" },
+                  { icon: ShieldCheck, text: "Priority support" },
+                ].map((perk, i) => (
+                  <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-amber-50 border border-amber-100">
+                    <div className="h-8 w-8 rounded-lg bg-white border border-amber-200 flex items-center justify-center flex-shrink-0">
+                      <perk.icon className="h-4 w-4 text-amber-600" />
+                    </div>
+                    <span className="text-sm font-semibold text-slate-700">{perk.text}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button
+                  onClick={() => setView("premium")}
+                  className="flex-1 h-12 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl font-bold shadow-lg shadow-amber-200 transition-all hover:scale-[1.02] group"
+                >
+                  <Crown className="h-4 w-4 mr-2" /> View Premium Plans
+                  <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition" />
+                </Button>
+                <Button
+                  onClick={() => setView("employerDash")}
+                  variant="outline"
+                  className="h-12 px-6 rounded-xl border-slate-200 font-bold"
+                >
+                  Maybe Later
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+    );
+  }
 
   const submit = async (e) => {
     e.preventDefault();
+    if (!isPremium) {
+      toast.error("Premium subscription required to post jobs");
+      return setView("premium");
+    }
     if (!company)
       return toast.error("Please register your company profile first!");
     setLoading(true);
@@ -4133,7 +4287,13 @@ function PostJobPage({ user, setView }) {
       toast.success("Job posted successfully!");
       setView("employerDash");
     } catch (err) {
-      toast.error(err.message);
+      const msg = err.message || "";
+      if (/premium/i.test(msg) || /subscription/i.test(msg)) {
+        toast.error(msg);
+        setView("premium");
+      } else {
+        toast.error(msg);
+      }
     } finally {
       setLoading(false);
     }
@@ -4614,6 +4774,24 @@ function ApplicantsView({ jobId, setView }) {
 // ============ PREMIUM PAGE ============
 function PremiumPage({ user, setUser, setView }) {
   const [loading, setLoading] = useState(false);
+
+  // Candidates don't need premium - redirect them to jobs
+  if (user?.role === "CANDIDATE") {
+    return (
+      <section className="container mx-auto px-6 py-20 max-w-lg text-center">
+        <div className="h-16 w-16 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mx-auto mb-5">
+          <CheckCircle className="h-8 w-8 text-emerald-600" />
+        </div>
+        <h2 className="text-2xl font-bold text-slate-900 mb-2 tracking-tight">All Features Free for Candidates</h2>
+        <p className="text-slate-500 mb-6">
+          Job seekers don't need a premium subscription. Apply to as many jobs as you like — no charges, no limits.
+        </p>
+        <Button onClick={() => setView("jobs")} className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white h-11 px-6 rounded-xl font-bold shadow-lg shadow-indigo-200">
+          Browse Jobs <ArrowRight className="h-4 w-4 ml-2" />
+        </Button>
+      </section>
+    );
+  }
 
   if (user?.isPremium) {
     return (
@@ -5495,13 +5673,6 @@ function AboutPage({ setView }) {
                 className="h-14 px-8 rounded-2xl bg-indigo-600 hover:bg-indigo-700 font-bold shadow-xl shadow-indigo-100 text-lg"
               >
                 Find Opportunities
-              </Button>
-              <Button
-                onClick={() => setView("academy_view")}
-                variant="outline"
-                className="h-14 px-8 rounded-2xl border-slate-200 font-bold text-lg bg-white"
-              >
-                Explore Academy
               </Button>
             </div>
           </div>

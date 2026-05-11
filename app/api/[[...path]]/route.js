@@ -10,6 +10,24 @@ export const dynamic = 'force-dynamic';
 const json = (data, status = 200) => NextResponse.json(data, { status });
 const err = (message, status = 400) => NextResponse.json({ error: message }, { status });
 
+// Attach a logo to each job from the companies collection when missing.
+async function attachLogos(db, jobs) {
+  if (!Array.isArray(jobs) || jobs.length === 0) return jobs;
+  const missingNames = [...new Set(jobs.filter(j => !j.companyLogo && !j.logo).map(j => j.companyName).filter(Boolean))];
+  if (missingNames.length === 0) {
+    jobs.forEach(j => { if (j.companyLogo && !j.logo) j.logo = j.companyLogo; });
+    return jobs;
+  }
+  const companies = await db.collection('companies').find({ name: { $in: missingNames } }, { projection: { name: 1, logo: 1, _id: 0 } }).toArray();
+  const map = Object.fromEntries(companies.map(c => [c.name, c.logo]));
+  jobs.forEach(j => {
+    const found = map[j.companyName];
+    if (!j.companyLogo && found) j.companyLogo = found;
+    if (!j.logo) j.logo = j.companyLogo || found || '';
+  });
+  return jobs;
+}
+
 async function route(request, { params }) {
   const path = params?.path || [];
   const method = request.method;
@@ -110,6 +128,7 @@ async function route(request, { params }) {
           .skip((page - 1) * limit)
           .limit(limit)
           .toArray();
+        await attachLogos(db, jobs);
         return json({ jobs, total, page, limit });
       }
 
@@ -127,7 +146,7 @@ async function route(request, { params }) {
         ]).toArray();
         const countMap = Object.fromEntries(counts.map(c => [c._id, c.count]));
         jobs.forEach(j => { j.applicantCount = countMap[j.id] || 0; });
-        
+        await attachLogos(db, jobs);
         return json({ jobs });
       }
 
@@ -135,7 +154,9 @@ async function route(request, { params }) {
       if (segs.length === 2 && method === 'GET') {
         const job = await db.collection('jobs').findOne({ id: s1 }, { projection: { _id: 0 } });
         if (!job) return err('Not found', 404);
-        return json({ job });
+        const arr = [job];
+        await attachLogos(db, arr);
+        return json({ job: arr[0] });
       }
 
       // POST /api/jobs (employer, premium)
@@ -143,9 +164,18 @@ async function route(request, { params }) {
         const user = await getUserFromRequest(request);
         if (!user) return err('Unauthorized', 401);
         if (user.role !== 'EMPLOYER' && user.role !== 'employer') return err('Only employers can post jobs', 403);
+        // Premium subscription gate (employers must be premium to post jobs)
+        const empUser = await db.collection('users').findOne({ id: user.id });
+        if (!empUser?.isPremium && !empUser?.premium) return err('Premium subscription required to post jobs', 402);
         const body = await request.json();
-        const { title, description, requiredSkills = [], experienceRequired = 0, companyName, location, salary = 0, category = 'General' } = body || {};
+        const { title, description, requiredSkills = [], experienceRequired = 0, companyName, companyLogo, location, salary = 0, category = 'General' } = body || {};
         if (!title || !description || !companyName || !location) return err('Missing fields');
+        // Fallback: pull logo from company profile if not provided
+        let logo = companyLogo || '';
+        if (!logo) {
+          const comp = await db.collection('companies').findOne({ createdBy: user.id });
+          logo = comp?.logo || '';
+        }
         const job = {
           id: uuidv4(),
           title,
@@ -154,6 +184,8 @@ async function route(request, { params }) {
           requiredSkills: Array.isArray(requiredSkills) ? requiredSkills : String(requiredSkills).split(',').map(s => s.trim()).filter(Boolean),
           experienceRequired: Number(experienceRequired) || 0,
           companyName,
+          companyLogo: logo,
+          logo: logo,
           location,
           salary: Number(salary) || 0,
           createdBy: user.id,
@@ -272,11 +304,18 @@ async function route(request, { params }) {
         if (!job) return err('Job not found', 404);
         const existing = await db.collection('applications').findOne({ jobId, candidateId: user.id });
         if (existing) return err('Already applied', 409);
+        // Resolve company logo
+        let logo = job.companyLogo || job.logo || '';
+        if (!logo) {
+          const comp = await db.collection('companies').findOne({ name: job.companyName });
+          logo = comp?.logo || '';
+        }
         const application = {
           id: uuidv4(),
           jobId,
           jobTitle: job.title,
           companyName: job.companyName,
+          companyLogo: logo,
           candidateId: user.id,
           candidateName: user.name,
           candidateEmail: user.email,
@@ -293,6 +332,13 @@ async function route(request, { params }) {
       // GET /api/applications/mine (candidate)
       if (s1 === 'mine' && method === 'GET') {
         const apps = await db.collection('applications').find({ candidateId: user.id }, { projection: { _id: 0 } }).sort({ appliedAt: -1 }).toArray();
+        // Attach company logo for older applications missing it
+        const missing = [...new Set(apps.filter(a => !a.companyLogo).map(a => a.companyName).filter(Boolean))];
+        if (missing.length > 0) {
+          const comps = await db.collection('companies').find({ name: { $in: missing } }, { projection: { name: 1, logo: 1, _id: 0 } }).toArray();
+          const cmap = Object.fromEntries(comps.map(c => [c.name, c.logo]));
+          apps.forEach(a => { if (!a.companyLogo) a.companyLogo = cmap[a.companyName] || ''; });
+        }
         return json({ applications: apps });
       }
 
@@ -425,6 +471,11 @@ async function route(request, { params }) {
       if (s0 === 'companies') {
         const enriched = await Promise.all(items.map(async (c) => {
           const jobs = await db.collection('jobs').find({ companyName: c.name }).toArray();
+          // Make sure jobs returned with a company carry the company logo
+          jobs.forEach(j => {
+            if (!j.logo) j.logo = j.companyLogo || c.logo || '';
+            if (!j.companyLogo) j.companyLogo = c.logo || '';
+          });
           return { ...c, jobs };
         }));
         return json({ companies: enriched });
