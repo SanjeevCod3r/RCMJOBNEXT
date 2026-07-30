@@ -471,8 +471,31 @@ function Navbar({
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-4 lg:gap-6">
-          <div className="hidden lg:flex items-center gap-2">
-            <Gamepad2 className="h-4 w-4 text-slate-400" />
+          <motion.div
+            animate={{ y: [0, -4, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            className={`hidden lg:flex items-center gap-3 px-4 py-2 rounded-full border-2 transition-all duration-300 shadow-lg ${
+              funMode 
+                ? "bg-gradient-to-r from-amber-50 to-orange-50 border-orange-300 shadow-orange-300/40" 
+                : "bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200 hover:border-indigo-300 shadow-indigo-200/40"
+            }`}
+          >
+            <motion.div
+              animate={{ rotate: [0, -15, 15, -15, 15, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 1 }}
+            >
+              <Gamepad2 className={`h-5 w-5 ${funMode ? "text-orange-500" : "text-indigo-600"}`} />
+            </motion.div>
+            <div className="flex flex-col">
+              <Label
+                htmlFor="fun-mode"
+                className={`text-[11px] font-extrabold uppercase tracking-widest cursor-pointer ${
+                  funMode ? "text-orange-600" : "text-indigo-700"
+                }`}
+              >
+                Fun Mode
+              </Label>
+            </div>
             <Switch
               id="fun-mode"
               checked={funMode}
@@ -481,15 +504,9 @@ function Navbar({
                 if (checked) onFunModeEnable();
                 else onFunModeDisable();
               }}
-              className="data-[state=checked]:bg-[#4B55E3] data-[state=unchecked]:bg-slate-200 h-[20px] w-[36px]"
+              className={`ml-1 data-[state=checked]:bg-orange-500 data-[state=unchecked]:bg-indigo-400`}
             />
-            <Label
-              htmlFor="fun-mode"
-              className="text-[11px] font-bold text-slate-500 uppercase tracking-wide"
-            >
-              Fun Mode
-            </Label>
-          </div>
+          </motion.div>
 
           {user ? (
             <div className="flex items-center gap-2 sm:gap-3">
@@ -640,10 +657,33 @@ function Navbar({
               </nav>
 
               <div className="px-4 pb-6">
-                <div className="flex items-center justify-between bg-slate-50 border border-slate-100 rounded-2xl p-3">
-                  <div className="flex items-center gap-2">
-                    <Gamepad2 className="h-4 w-4 text-indigo-500" />
-                    <span className="text-sm font-bold text-slate-700">Fun Mode</span>
+                <motion.div
+                  animate={{ y: [0, -4, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  className={`flex items-center justify-between rounded-2xl p-4 border-2 transition-all duration-300 shadow-lg ${
+                    funMode
+                      ? "bg-gradient-to-r from-amber-50 to-orange-50 border-orange-300 shadow-orange-300/40"
+                      : "bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200 shadow-indigo-200/40"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <motion.div
+                      animate={{ rotate: [0, -15, 15, -15, 15, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 1 }}
+                      className={`h-10 w-10 rounded-xl flex items-center justify-center shadow-sm ${
+                        funMode ? "bg-orange-100 text-orange-500" : "bg-indigo-100 text-indigo-600"
+                      }`}
+                    >
+                      <Gamepad2 className="h-5 w-5" />
+                    </motion.div>
+                    <div>
+                      <div className={`text-sm font-bold ${funMode ? "text-orange-700" : "text-indigo-800"}`}>
+                        Fun Mode
+                      </div>
+                      <div className={`text-[10px] font-bold uppercase tracking-wider ${funMode ? "text-orange-500" : "text-indigo-500"}`}>
+                        {funMode ? "Active!" : "Disabled"}
+                      </div>
+                    </div>
                   </div>
                   <Switch
                     checked={funMode}
@@ -652,9 +692,9 @@ function Navbar({
                       if (checked) onFunModeEnable();
                       else onFunModeDisable();
                     }}
-                    className="data-[state=checked]:bg-[#4B55E3] data-[state=unchecked]:bg-slate-300"
+                    className={`data-[state=checked]:bg-orange-500 data-[state=unchecked]:bg-indigo-400`}
                   />
-                </div>
+                </motion.div>
 
                 {user && (
                   <Button
@@ -879,35 +919,7 @@ function Home({
       </section>
 
       {/* TRUST SECTION */}
-      <section className="py-20 border-y border-slate-100 bg-white">
-        <div className="container mx-auto px-4 sm:px-6">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-slate-500 text-sm font-bold uppercase tracking-[0.2em] mb-12 text-center"
-          >
-            Companies we helped grow
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.15 }}
-            className="flex flex-wrap justify-center lg:justify-between items-center gap-12 lg:gap-16 opacity-40 grayscale contrast-125 hover:opacity-70 transition-opacity duration-500"
-          >
-            {companies.map((company) => (
-              <img
-                key={company.name}
-                src={company.logo}
-                alt={company.name}
-                className="h-9 lg:h-10 object-contain hover:scale-110 transition-transform duration-300"
-              />
-            ))}
-          </motion.div>
-        </div>
-      </section>
+
 
 
       {/* PATH SELECTION SECTION */}
@@ -973,6 +985,38 @@ function Home({
               color="orange"
               onClick={() => setView("academy_view")}
             />
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 border-y border-slate-100 bg-white">
+        <div className="container mx-auto px-4 sm:px-6">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-slate-500 text-sm font-bold uppercase tracking-[0.2em] mb-12 text-center"
+          >
+            Companies we helped grow
+          </motion.p>
+          <div className="overflow-hidden w-full relative whitespace-nowrap py-4">
+            <div className="absolute left-0 top-0 w-16 sm:w-32 h-full bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+            <div className="absolute right-0 top-0 w-16 sm:w-32 h-full bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+            <motion.div
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ ease: "linear", duration: 25, repeat: Infinity }}
+              className="flex w-max gap-16 lg:gap-24 items-center opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500"
+            >
+              {[...companies, ...companies, ...companies, ...companies].map((company, index) => (
+                <img
+                  key={`${company.name}-${index}`}
+                  src={company.logo}
+                  alt={company.name}
+                  className="h-9 lg:h-12 object-contain hover:scale-110 transition-transform duration-300 cursor-pointer"
+                />
+              ))}
+            </motion.div>
           </div>
         </div>
       </section>
