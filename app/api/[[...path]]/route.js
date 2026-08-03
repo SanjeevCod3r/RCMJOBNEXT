@@ -525,6 +525,147 @@ async function route(request, { params }) {
         return json({ payments });
       }
 
+      if (s1 === 'reports' && method === 'GET') {
+        const type = s2;
+        if (type === 'candidates') {
+          const candidates = await db.collection('users').find({ role: 'CANDIDATE' }, { projection: { _id: 0, password: 0 } }).toArray();
+          const profiles = await db.collection('candidateProfiles').find({}, { projection: { _id: 0 } }).toArray();
+          const profileMap = Object.fromEntries(profiles.map(p => [p.userId, p]));
+          const apps = await db.collection('applications').aggregate([{ $group: { _id: '$candidateId', count: { $sum: 1 } } }]).toArray();
+          const appMap = Object.fromEntries(apps.map(a => [a._id, a.count]));
+
+          const report = candidates.map(c => {
+            const p = profileMap[c.id] || {};
+            return {
+              'Name': c.name || '',
+              'Phone': p.phone || '',
+              'Email': c.email || '',
+              'Address': p.location || '',
+              'State': '',
+              'DOB': '',
+              'Gender': '',
+              'Marital Status': '',
+              'Nationality': '',
+              'Industry': '',
+              "Company's Strength": '',
+              "Candidate's Designation": '',
+              'Total Experience': p.experience || '',
+              'Linkedin Profile Link': '',
+              'Website/Portal Link': '',
+              'Highest Educational Degree/Diploma': p.education || '',
+              'Operating Since': '',
+              'RCM Jobs Registration Date': c.createdAt ? new Date(c.createdAt).toLocaleDateString() : '',
+              'Year of Certification (Education)': '',
+              'Board/University': '',
+              "Current/Last Organization's Name": '',
+              'Current/Last Designation': '',
+              "All Organization's Names": '',
+              'Total Applications': '',
+              'Qualified Candidates': '',
+              'Interview Conducted': '',
+              'Speciality/Department': '',
+              'Work Location': '',
+              'Ready to relocate?': '',
+              "First Organization's Joining date/Year": '',
+              'Offers Released': '',
+              'Offer Accepted': '',
+              'Specialities Worked (as of now)': '',
+              'PMS Worked (as of now)': '',
+              "Last/Current Organization's Jonining Date/Year": '',
+              "Last/Current Organization's Leaving Date/Year": '',
+              'Total Cost': '',
+              'Last/Current Posting Date': '',
+              'Hospital/Physician Billing Experience': '',
+              'Calling Experience Duration': '',
+              'Languages Known': '',
+              'Resume Uploaded?': p.resumeUrl ? 'Yes' : 'No',
+              'Last/Current Posting Job': '',
+              'Last/Current Job Posting ID': '',
+              'Top Profile Posting': '',
+              'Current/Last Salary Drawn': '',
+              'Salary Expectation': '',
+              'Hiring Status': '',
+              'Skills': (p.skills || []).join(', '),
+              'Hobbies': '',
+              'Achievements': '',
+              'Notice Period': '',
+              'Total Jobs Applied': appMap[c.id] || 0,
+              'Total Interview Scheduled': '',
+              'Registration Source': '',
+              'Last Activity Date': '',
+              'Profile Score': '',
+              'Questions Attempted': '',
+              '# of Referrences': '',
+              'Referred by': '',
+              'Other Industry candidate would ilke to work': '',
+              'Additional Professional Certifications': '',
+              'Salary increase % age after joining RCM Jobs': '',
+              'Favorite Places to Visit': '',
+              'Favorite Food': '',
+              "Life's Goal": '',
+              'Favorite Time Pass': '',
+              'Changes you want to bring in RCM': '',
+              'Your Ideal': '',
+              'Which social media platform you would like to access the most?': '',
+              'Which all trainings you would like to get for yourself?': '',
+              'Did you ever try to start up your own business?': '',
+              'If yes, which industry you tried business in?': '',
+              'Out of these which of the items you spend the most?': '',
+            };
+          });
+          return json({ report });
+        }
+        
+        if (type === 'employers') {
+          const companies = await db.collection('companies').find({}, { projection: { _id: 0 } }).toArray();
+          const jobsAgg = await db.collection('jobs').aggregate([{ $group: { _id: '$companyName', count: { $sum: 1 } } }]).toArray();
+          const jobsMap = Object.fromEntries(jobsAgg.map(j => [j._id, j.count]));
+
+          const report = companies.map(c => {
+            return {
+              "Company's Name": c.name || '',
+              "Contact Person": '',
+              "Phone": '',
+              "Fax": '',
+              "Operating Since": '',
+              "Total Jobs Posted": jobsMap[c.name] || 0,
+              "Total Views": '',
+            };
+          });
+          return json({ report });
+        }
+
+        if (type === 'jobs') {
+          const jobs = await db.collection('jobs').find({}, { projection: { _id: 0 } }).toArray();
+          const apps = await db.collection('applications').find({}, { projection: { _id: 0 } }).toArray();
+          
+          const report = [];
+          for (const job of jobs) {
+            const jobApps = apps.filter(a => a.jobId === job.id);
+            if (jobApps.length === 0) {
+              report.push({
+                "Job Posting ID": job.id,
+                "Job Posting Title": job.title,
+                "Company's Name": job.companyName,
+                "Applied Candidate Name": ""
+              });
+            } else {
+              for (const app of jobApps) {
+                report.push({
+                  "Job Posting ID": job.id,
+                  "Job Posting Title": job.title,
+                  "Company's Name": job.companyName,
+                  "Applied Candidate Name": app.candidateName || ""
+                });
+              }
+            }
+          }
+          return json({ report });
+        }
+        
+        return err('Invalid report type', 400);
+      }
+
       // NEW ADMIN SECTIONS
       if (s1 === 'companies') {
         if (method === 'GET') return json({ companies: await db.collection('companies').find({}, { projection: { _id: 0 } }).sort({ name: 1 }).toArray() });

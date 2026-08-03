@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Users, Briefcase, Building2, Zap, BookOpen, IndianRupee, Crown, Trash2, Loader2, ArrowLeft, Plus, Layers } from 'lucide-react';
+import { Users, Briefcase, Building2, Zap, BookOpen, IndianRupee, Crown, Trash2, Loader2, ArrowLeft, Plus, Layers, Download } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
@@ -116,6 +116,33 @@ function AdminTabContent({ value, items, type, onAdd, onDelete }) {
   );
 }
 
+const downloadCSV = (filename, data) => {
+  if (!data || data.length === 0) return toast.error('No data to download');
+  const headers = Object.keys(data[0]);
+  const escapeCSV = (val) => {
+    if (val === null || val === undefined) return '';
+    const str = String(val);
+    if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
+  };
+  const csvContent = [
+    headers.map(escapeCSV).join(','),
+    ...data.map(row => headers.map(h => escapeCSV(row[h])).join(','))
+  ].join('\n');
+  
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', filename);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 export default function AdminPage() {
   const router = useRouter();
   const [stats, setStats] = useState(null);
@@ -178,6 +205,21 @@ export default function AdminPage() {
     load(); 
   };
 
+  const downloadReport = async (type, filename) => {
+    const tid = toast.loading(`Generating ${filename}...`);
+    try {
+      const data = await api(`/admin/reports/${type}`);
+      if (data && data.report) {
+        downloadCSV(filename, data.report);
+        toast.success('Report downloaded successfully', { id: tid });
+      } else {
+        toast.error('No data found', { id: tid });
+      }
+    } catch (e) {
+      toast.error(e.message || 'Failed to generate report', { id: tid });
+    }
+  };
+
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-slate-50"><Loader2 className="h-10 w-10 animate-spin text-indigo-600" /></div>;
 
   return (
@@ -225,7 +267,7 @@ export default function AdminPage() {
                  <h4 className="font-bold text-slate-900 text-sm uppercase tracking-widest">Navigation</h4>
               </div>
               <TabsList className="flex flex-col h-auto w-full bg-transparent p-4 gap-2 border-0">
-                {['overview', 'users', 'jobs', 'companies', 'community', 'payments'].map((tab) => (
+                {['overview', 'users', 'jobs', 'companies', 'community', 'payments', 'reports'].map((tab) => (
                   <TabsTrigger 
                     key={tab} 
                     value={tab}
@@ -332,7 +374,55 @@ export default function AdminPage() {
                   </div>
                 ))}
                 {payments.length === 0 && <div className="p-12"><EmptyState icon={IndianRupee} title="No payments recorded" subtitle="Transactions will appear here once processed." /></div>}
-              </CardContent></Card>
+              </CardContent></Card></TabsContent>
+
+            <TabsContent value="reports" className="m-0 focus:outline-none">
+              <Card className="border-none shadow-2xl shadow-slate-200/50 rounded-[2.5rem] bg-white overflow-hidden">
+                <div className="p-8 border-b border-slate-50 bg-white">
+                  <h3 className="text-2xl font-bold text-slate-900 tracking-tight">System Reports</h3>
+                  <p className="text-sm font-medium text-slate-500 mt-1">Download comprehensive platform data in CSV format.</p>
+                </div>
+                <CardContent className="p-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  <div className="p-6 rounded-3xl bg-slate-50 border border-slate-100 flex flex-col justify-between h-56 group hover:shadow-xl transition-all">
+                    <div>
+                      <div className="h-12 w-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-4">
+                        <Users className="h-6 w-6" />
+                      </div>
+                      <h4 className="font-bold text-lg text-slate-900 mb-1">Candidate Details</h4>
+                      <p className="text-sm text-slate-500 line-clamp-2">Complete employee profile dataset including skills, experience, and contact info.</p>
+                    </div>
+                    <Button onClick={() => downloadReport('candidates', 'Candidate_Details.csv')} variant="outline" className="w-full mt-4 bg-white hover:bg-indigo-50 hover:text-indigo-600 transition-colors border-slate-200 font-bold">
+                      <Download className="h-4 w-4 mr-2" /> Download CSV
+                    </Button>
+                  </div>
+                  
+                  <div className="p-6 rounded-3xl bg-slate-50 border border-slate-100 flex flex-col justify-between h-56 group hover:shadow-xl transition-all">
+                    <div>
+                      <div className="h-12 w-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4">
+                        <Building2 className="h-6 w-6" />
+                      </div>
+                      <h4 className="font-bold text-lg text-slate-900 mb-1">Employer Details</h4>
+                      <p className="text-sm text-slate-500 line-clamp-2">Comprehensive employer profiles and company information.</p>
+                    </div>
+                    <Button onClick={() => downloadReport('employers', 'Employer_Details.csv')} variant="outline" className="w-full mt-4 bg-white hover:bg-emerald-50 hover:text-emerald-600 transition-colors border-slate-200 font-bold">
+                      <Download className="h-4 w-4 mr-2" /> Download CSV
+                    </Button>
+                  </div>
+                  
+                  <div className="p-6 rounded-3xl bg-slate-50 border border-slate-100 flex flex-col justify-between h-56 group hover:shadow-xl transition-all">
+                    <div>
+                      <div className="h-12 w-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mb-4">
+                        <Briefcase className="h-6 w-6" />
+                      </div>
+                      <h4 className="font-bold text-lg text-slate-900 mb-1">Job Postings</h4>
+                      <p className="text-sm text-slate-500 line-clamp-2">Complete report of all job postings and associated applications.</p>
+                    </div>
+                    <Button onClick={() => downloadReport('jobs', 'Job_Postings_Report.csv')} variant="outline" className="w-full mt-4 bg-white hover:bg-amber-50 hover:text-amber-600 transition-colors border-slate-200 font-bold">
+                      <Download className="h-4 w-4 mr-2" /> Download CSV
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
           </div>
         </Tabs>

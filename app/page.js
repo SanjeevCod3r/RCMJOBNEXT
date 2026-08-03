@@ -138,6 +138,7 @@ function App() {
   const [selectedJobId, setSelectedJobId] = useState(null);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [viewingJobApplicantsId, setViewingJobApplicantsId] = useState(null);
+  const [globalSearchQuery, setGlobalSearchQuery] = useState("");
 
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [funMode, setFunMode] = useState(false);
@@ -210,6 +211,8 @@ function App() {
         setFunMode={setFunMode}
         onFunModeEnable={() => setShowGameHub(true)}
         onFunModeDisable={() => setShowGameHub(false)}
+        globalSearchQuery={globalSearchQuery}
+        setGlobalSearchQuery={setGlobalSearchQuery}
       />
       <main>
         {view === "home" && (
@@ -224,7 +227,7 @@ function App() {
           />
         )}
         {view === "jobs" && (
-          <Jobs setView={setView} setSelectedJobId={setSelectedJobId} />
+          <Jobs setView={setView} setSelectedJobId={setSelectedJobId} globalSearchQuery={globalSearchQuery} setGlobalSearchQuery={setGlobalSearchQuery} />
         )}
         {view === "jobDetails" && (
           <JobDetails
@@ -345,10 +348,19 @@ function Navbar({
   setFunMode,
   onFunModeEnable,
   onFunModeDisable,
+  globalSearchQuery,
+  setGlobalSearchQuery,
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [catSections, setCatSections] = useState([]);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [localSearch, setLocalSearch] = useState(globalSearchQuery || "");
+
+  useEffect(() => {
+    if (globalSearchQuery !== undefined && globalSearchQuery !== localSearch) {
+      setLocalSearch(globalSearchQuery);
+    }
+  }, [globalSearchQuery]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -471,6 +483,27 @@ function Navbar({
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-4 lg:gap-6">
+          <form 
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (localSearch.trim()) {
+                if (setGlobalSearchQuery) setGlobalSearchQuery(localSearch);
+                setView("jobs");
+              }
+            }}
+            className="hidden lg:flex items-center relative"
+          >
+            <div className="absolute left-3 text-slate-400">
+              <Search size={16} />
+            </div>
+            <input 
+              type="text"
+              placeholder="Search jobs..."
+              value={localSearch}
+              onChange={(e) => setLocalSearch(e.target.value)}
+              className="pl-9 pr-4 py-1.5 sm:py-2 text-sm bg-slate-100/80 border border-transparent rounded-full focus:bg-white focus:ring-2 focus:ring-indigo-500/50 outline-none w-40 xl:w-60 transition-all text-slate-700 placeholder:text-slate-400 shadow-inner"
+            />
+          </form>
           <motion.div
             animate={{ y: [0, -4, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -623,6 +656,30 @@ function Navbar({
                     </Button>
                   </div>
                 )}
+              </div>
+
+              <div className="p-4 border-b border-slate-100 bg-slate-50/50">
+                <form 
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (localSearch.trim()) {
+                      if (setGlobalSearchQuery) setGlobalSearchQuery(localSearch);
+                      navigateMobile("jobs");
+                    }
+                  }}
+                  className="flex items-center relative"
+                >
+                  <div className="absolute left-3 text-slate-400">
+                    <Search size={16} />
+                  </div>
+                  <input 
+                    type="text"
+                    placeholder="Search jobs..."
+                    value={localSearch}
+                    onChange={(e) => setLocalSearch(e.target.value)}
+                    className="pl-9 pr-4 py-2.5 w-full text-sm bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all text-slate-700 placeholder:text-slate-400 shadow-sm"
+                  />
+                </form>
               </div>
 
               <nav className="p-4 space-y-1">
@@ -801,8 +858,7 @@ function Home({
               <motion.p
                 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-slate-500 mb-3 max-w-[90%] text-base leading-7">
-                Great platform for job seekers passionate about startups and
-                seeking new career heights.
+                Find Your Next Opportunity in RCM
               </motion.p>
               {/* Search Bar */}
               <motion.div
@@ -2131,11 +2187,23 @@ function JobCard({ job, onClick, featuredIndex }) {
 }
 
 // ============ JOBS LIST ============
-function Jobs({ setView, setSelectedJobId }) {
+function Jobs({ setView, setSelectedJobId, globalSearchQuery, setGlobalSearchQuery }) {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(globalSearchQuery || "");
   const [location, setLocation] = useState("");
+
+  useEffect(() => {
+    if (globalSearchQuery !== undefined && globalSearchQuery !== search) {
+      setSearch(globalSearchQuery);
+    }
+  }, [globalSearchQuery]);
+
+  useEffect(() => {
+    if (setGlobalSearchQuery && search !== globalSearchQuery) {
+      setGlobalSearchQuery(search);
+    }
+  }, [search]);
   const [skill, setSkill] = useState("");
   const [minSalary, setMinSalary] = useState("");
   const [category, setCategory] = useState("");
