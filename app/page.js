@@ -1113,64 +1113,93 @@ function Home({
             </Button>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <CategoryCard
-              icon={LayoutDashboard}
-              title="Design"
-              jobs="235"
-              color="blue"
-              onClick={() => setView("jobs")}
-            />
-            <CategoryCard
-              icon={BarChart3}
-              title="Sales"
-              jobs="760"
-              color="indigo"
-              onClick={() => setView("jobs")}
-            />
-            <CategoryCard
-              icon={Mail}
-              title="Marketing"
-              jobs="400"
-              color="purple"
-              active
-              onClick={() => setView("jobs")}
-            />
-            <CategoryCard
-              icon={IndianRupee}
-              title="Finance"
-              jobs="150"
-              color="emerald"
-              onClick={() => setView("jobs")}
-            />
-            <CategoryCard
-              icon={Zap}
-              title="Technology"
-              jobs="320"
-              color="orange"
-              onClick={() => setView("jobs")}
-            />
-            <CategoryCard
-              icon={Plus}
-              title="Engineering"
-              jobs="543"
-              color="blue"
-              onClick={() => setView("jobs")}
-            />
-            <CategoryCard
-              icon={Briefcase}
-              title="Business"
-              jobs="200"
-              color="slate"
-              onClick={() => setView("jobs")}
-            />
-            <CategoryCard
-              icon={Users}
-              title="Human Resources"
-              jobs="320"
-              color="rose"
-              onClick={() => setView("jobs")}
-            />
+          <div className="mb-8">
+            <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+              <span className="w-8 h-[2px] bg-indigo-600 rounded-full"></span>
+              Front-End RCM
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <CategoryCard
+                icon={Clock}
+                title="Patient Scheduling"
+                jobs="120"
+                color="blue"
+                onClick={() => setView("jobs")}
+              />
+              <CategoryCard
+                icon={ShieldCheck}
+                title="Eligibility & Benefits Verification"
+                jobs="150"
+                color="emerald"
+                onClick={() => setView("jobs")}
+              />
+              <CategoryCard
+                icon={ShieldCheck}
+                title="Prior Authorization"
+                jobs="320"
+                color="orange"
+                onClick={() => setView("jobs")}
+              />
+              <CategoryCard
+                icon={Award}
+                title="Credentialing"
+                jobs="90"
+                color="slate"
+                onClick={() => setView("jobs")}
+              />
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+              <span className="w-8 h-[2px] bg-indigo-600 rounded-full"></span>
+              Back-End RCM
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <CategoryCard
+                icon={FileText}
+                title="Coding"
+                jobs="230"
+                color="indigo"
+                onClick={() => setView("jobs")}
+              />
+              <CategoryCard
+                icon={FileText}
+                title="Charge Posting / Claim Scrubbing & Submission"
+                jobs="400"
+                color="purple"
+                active
+                onClick={() => setView("jobs")}
+              />
+              <CategoryCard
+                icon={IndianRupee}
+                title="Payment Posting"
+                jobs="210"
+                color="blue"
+                onClick={() => setView("jobs")}
+              />
+              <CategoryCard
+                icon={TrendingUp}
+                title="Account Receivable (AR)"
+                jobs="180"
+                color="indigo"
+                onClick={() => setView("jobs")}
+              />
+              <CategoryCard
+                icon={Minus}
+                title="Underpayments"
+                jobs="60"
+                color="emerald"
+                onClick={() => setView("jobs")}
+              />
+              <CategoryCard
+                icon={Plus}
+                title="Credit Balance"
+                jobs="85"
+                color="blue"
+                onClick={() => setView("jobs")}
+              />
+            </div>
           </div>
         </div>
       </section>

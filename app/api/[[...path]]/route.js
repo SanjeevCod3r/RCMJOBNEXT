@@ -92,10 +92,8 @@ async function route(request, { params }) {
     // ======= CATEGORIES =======
     if (s0 === 'categories' && method === 'GET') {
       const sections = [
-        { name: 'Operations', items: ['Scheduling Assistant', 'Patient Registration'] },
-        { name: 'Medical Billing & Coding', items: ['Medical Coding', 'Charge Posting', 'Payment Posting', 'Medical Transcription', 'Medical Scribe'] },
-        { name: 'AR & RCM', items: ['Eligibility & Benefits', 'Prior Authorization', 'Billing & Rejections'] },
-        { name: 'General', items: ['Design', 'Sales', 'Marketing', 'Finance', 'Technology', 'Engineering', 'Business', 'Human Resources'] }
+        { name: 'Front-End RCM', items: ['Patient Scheduling','Eligibility & Benefits Verification','Prior Authorization','Credentialing'] },
+        { name: 'Back-End RCM', items: ['Coding', 'Charge Posting / Claim Scrubbing & Submission', 'Payment Posting', 'Account Receivable (AR)', 'Underpayments', 'Credit Balance'] }
       ];
       return json({ sections });
     }
