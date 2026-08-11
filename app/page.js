@@ -215,7 +215,16 @@ function App() {
         setGlobalSearchQuery={setGlobalSearchQuery}
       />
       <main>
-        {view === "home" && (
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={view}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="w-full"
+          >
+            {view === "home" && (
           <Home
             setView={setView}
             setSelectedJobId={setSelectedJobId}
@@ -224,6 +233,7 @@ function App() {
             setShowGameHub={setShowGameHub}
             userPoints={userPoints}
             setUserPoints={setUserPoints}
+            funMode={funMode}
           />
         )}
         {view === "jobs" && (
@@ -309,6 +319,8 @@ function App() {
         {view === "privacy" && <PrivacyPage setView={setView} />}
         {view === "terms" && <TermsPage setView={setView} />}
         {view === "contact" && <ContactPage setView={setView} />}
+          </motion.div>
+        </AnimatePresence>
       </main>
       <Footer setView={setView} />
 
@@ -797,6 +809,7 @@ function Home({
   setShowGameHub,
   userPoints,
   setUserPoints,
+  funMode,
 }) {
   const [jobs, setJobs] = useState([]);
   const [search, setSearch] = useState("");
@@ -823,9 +836,9 @@ function Home({
   ];
 
   return (
-    <div className="bg-white overflow-x-hidden">
+    <div className={`overflow-x-hidden transition-all duration-700 ${funMode ? "bg-gradient-to-tr from-fuchsia-300 via-yellow-200 to-cyan-300 min-h-screen" : "bg-white"}`} style={funMode ? { fontFamily: '"Comic Sans MS", "Chalkboard SE", "Comic Neue", sans-serif' } : {}}>
       {/* HERO SECTION */}
-      <section className="relative z-10 overflow-x-hidden bg-gradient-to-br from-[#F8F8FD] via-white to-indigo-50/40 py-8 sm:py-10 pb-0 lg:py-0 lg:pt-5">
+      <section className={`relative z-10 overflow-x-hidden py-8 sm:py-10 pb-0 lg:py-0 lg:pt-5 transition-all duration-700 ${funMode ? "bg-transparent" : "bg-gradient-to-br from-[#F8F8FD] via-white to-indigo-50/40"}`}>
         {/* Decorative ambient orbs */}
         <div className="absolute top-20 -left-32 w-[400px] h-[400px] bg-indigo-300/20 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-300/20 rounded-full blur-[120px] pointer-events-none" />
@@ -845,12 +858,12 @@ function Home({
                 <div className="absolute -top-10 -left-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl" />
                 <motion.h1
                   initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
-                  className="mb-6 sm:mb-9 text-3xl sm:text-4xl md:text-5xl leading-tight sm:leading-none font-bold text-[#2A2E43] xl:text-[5rem] tracking-tight relative z-10">
+                  className={`mb-6 sm:mb-9 text-3xl sm:text-4xl md:text-5xl leading-tight sm:leading-none font-bold xl:text-[5rem] tracking-tight relative z-10 transition-all duration-500 ${funMode ? "text-fuchsia-700 font-black drop-shadow-[4px_4px_0_rgba(0,0,0,1)] scale-105 transform-gpu" : "text-[#2A2E43]"}`}>
                   Discover more than{" "}
-                  <span className="text-indigo-600 relative inline-block">
+                  <span className={`relative inline-block transition-all duration-500 ${funMode ? "text-yellow-400 drop-shadow-[4px_4px_0_rgba(0,0,0,1)] animate-bounce" : "text-indigo-600"}`}>
                     5000+ Jobs
-                    <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 8" preserveAspectRatio="none">
-                      <path d="M0 4 Q 50 0, 100 4 T 200 4" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" className="text-indigo-300" />
+                    <svg className={`absolute -bottom-2 left-0 w-full transition-colors duration-500 ${funMode ? "text-yellow-400" : "text-indigo-300"}`} viewBox="0 0 200 8" preserveAspectRatio="none">
+                      <path d="M0 4 Q 50 0, 100 4 T 200 4" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" />
                     </svg>
                   </span>
                 </motion.h1>
@@ -979,7 +992,7 @@ function Home({
 
 
       {/* PATH SELECTION SECTION */}
-      <section className="py-24 bg-gradient-to-b from-slate-50 via-white to-slate-50 relative overflow-hidden">
+      <section className={`py-24 relative overflow-hidden transition-colors duration-700 ${funMode ? "bg-transparent" : "bg-gradient-to-b from-slate-50 via-white to-slate-50"}`}>
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-200/40 rounded-full blur-[120px] -mr-32 -mt-32 pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-emerald-200/40 rounded-full blur-[120px] -ml-32 -mb-32 pointer-events-none" />
@@ -1045,7 +1058,7 @@ function Home({
         </div>
       </section>
 
-      <section className="py-20 border-y border-slate-100 bg-white">
+      <section className={`py-20 border-y border-slate-100 transition-colors duration-700 ${funMode ? "bg-transparent" : "bg-white"}`}>
         <div className="container mx-auto px-4 sm:px-6">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -1078,7 +1091,7 @@ function Home({
       </section>
 
       {/* EXPLORE BY CATEGORY */}
-      <section className="py-24 bg-white overflow-hidden relative">
+      <section className={`py-24 overflow-hidden relative transition-colors duration-700 ${funMode ? "bg-transparent" : "bg-white"}`}>
         {/* Decorative orbs */}
         <div className="absolute top-32 right-0 w-72 h-72 bg-purple-100/40 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute bottom-32 left-0 w-72 h-72 bg-indigo-100/40 rounded-full blur-[100px] pointer-events-none" />
@@ -2117,7 +2130,7 @@ function JobCard({ job, onClick, featuredIndex }) {
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.9 }}
       whileHover={{ y: -8 }}
-      transition={{ duration: 0.4, type: "spring", bounce: 0.3 }}
+      transition={{ duration: 0.4, type: "spring", bounce: 0.3, delay: (featuredIndex || 0) * 0.05 }}
       onClick={onClick}
       className={`group cursor-pointer rounded-3xl p-8 bg-white border transition-all duration-500 flex flex-col min-h-[380px] relative overflow-hidden ${isFeatured
           ? "border-indigo-600 shadow-2xl shadow-indigo-100 ring-4 ring-indigo-50"
@@ -6381,7 +6394,12 @@ function EmptyState({ icon: Icon, title, subtitle, action }) {
 // ============ ABOUT PAGE ============
 function AboutPage({ setView }) {
   return (
-    <div className="bg-white">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, type: "spring", bounce: 0 }}
+      className="bg-white"
+    >
       {/* HERO SECTION */}
       <section className="relative py-12 sm:py-20 lg:py-24 overflow-hidden bg-slate-50">
         <div className="absolute top-0 right-0 w-1/3 h-full bg-indigo-600/5 -skew-x-12 translate-x-32" />
@@ -6487,7 +6505,7 @@ function AboutPage({ setView }) {
 
       {/* STATS */}
 
-    </div>
+    </motion.div>
   );
 }
 
@@ -6550,7 +6568,12 @@ function ContactPage({ setView }) {
   };
 
   return (
-    <div className="bg-white min-h-screen">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, type: "spring", bounce: 0 }}
+      className="bg-white min-h-screen"
+    >
       {/* HEADER */}
       <section className="bg-slate-900 py-12 sm:py-20 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-indigo-600/10 skew-x-12 translate-x-32" />
@@ -6689,7 +6712,7 @@ function ContactPage({ setView }) {
           </div>
         </div>
       </section>
-    </div>
+    </motion.div>
   );
 }
 
@@ -6720,7 +6743,12 @@ function SocialBtn({ icon: Icon }) {
 // ============ PRIVACY POLICY ============
 function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-slate-50 py-20">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, type: "spring", bounce: 0 }}
+      className="min-h-screen bg-slate-50 py-20"
+    >
       <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
         <Card className="border-none shadow-2xl shadow-slate-200/50 rounded-[2.5rem] overflow-hidden bg-white p-12 lg:p-20">
           <Badge className="mb-6 bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-50 px-4 py-1.5 rounded-full font-bold uppercase tracking-widest text-xs">
@@ -6783,14 +6811,19 @@ function PrivacyPage() {
           </div>
         </Card>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 // ============ TERMS OF SERVICE ============
 function TermsPage() {
   return (
-    <div className="min-h-screen bg-slate-50 py-20">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, type: "spring", bounce: 0 }}
+      className="min-h-screen bg-slate-50 py-20"
+    >
       <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
         <Card className="border-none shadow-2xl shadow-slate-200/50 rounded-[2.5rem] overflow-hidden bg-white p-12 lg:p-20">
           <Badge className="mb-6 bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-50 px-4 py-1.5 rounded-full font-bold uppercase tracking-widest text-xs">
@@ -6852,7 +6885,7 @@ function TermsPage() {
           </div>
         </Card>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -7071,7 +7104,12 @@ function CompanyDetails({ company, setView, setSelectedJobId }) {
     return <EmptyState icon={Building2} title="Company not found" />;
 
   return (
-    <div className="bg-[#F8F9FE] min-h-screen pb-20">
+    <motion.div
+      initial={{ opacity: 0, x: 50 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.4, type: "spring", bounce: 0 }}
+      className="bg-[#F8F9FE] min-h-screen pb-20"
+    >
       {/* Hero Header */}
       <div className="relative pt-24 pb-28 overflow-hidden">
         {/* Background Image with Overlay */}
@@ -7235,7 +7273,7 @@ function CompanyDetails({ company, setView, setSelectedJobId }) {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
