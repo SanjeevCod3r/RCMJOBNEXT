@@ -1220,7 +1220,7 @@ function Home({
       {showGameHub && (
         <section
           id="fun-mode-section"
-          className="animate-in fade-in slide-in-from-top duration-700"
+          className="animate-in fade-in duration-300"
         >
           <GameHub
             onBack={() => setShowGameHub(false)}
@@ -8504,7 +8504,7 @@ function GameHub({ onBack, setView, userPoints, setUserPoints }) {
 
   return (
     <div className="bg-[#0F172A] min-h-screen overflow-hidden">
-      <GameHeader userPoints={userPoints} onBack={onBack} title="RCM Game Hub" subtitle="Spin to unlock new career challenges." />
+      <GameHeader userPoints={userPoints} onBack={onBack} title="Game Hub" subtitle="Spin to unlock new career challenges." />
 
       <div className="container mx-auto px-4 sm:px-6 py-24 text-center">
         <Badge className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20 mb-6 px-4 py-1.5 rounded-full uppercase tracking-[0.2em] text-[10px] font-bold">
